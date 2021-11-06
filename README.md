@@ -1,5 +1,7 @@
 # Crittografia
 
+Appunti del corso di crittografia 2021/22 di Luigi Seminara. 
+
 
 
 ## Slides
@@ -21,4 +23,3 @@
 ## Link utili
 
 - <a href="https://youtu.be/5VY2KEh9WrE">Attacco del compleanno</a>
-
