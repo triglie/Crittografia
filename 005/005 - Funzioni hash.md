@@ -441,3 +441,87 @@ Per tali funzioni hash possiamo applicare l'analisi dell'attacco del compleanno.
 La nostra conclusione è che se $H$ è regolare, allora la probabilità che l'attacco abbia successo è approssimativamente $C(N, q)$. Quindi quanto sopra dice che in questo caso abbiamo bisogno di $q ≈ \sqrt{2N} = \sqrt{2 · |R|}$ prove per trovare una collisione con probabilità prossima a uno.
 
 Possiamo, infine, affermare che se la funzione hash è perfettamente regolare, allora l'unico attacco migliore è quello del compleanno.
+
+
+
+**Osservazioni**
+
+Dalla descrizione dell'attacco del compleanno nella ricerca di collisioni, possiamo affermare che la dimensione dell'insieme di partenza $D$ non è importante, mentre la dimensione dell'insieme di arrivo $R$ è fondamentale, perché se questo avesse una cardinalità piccola, allora la probabilità di trovare una collisione è maggiore. 
+
+L'attacco migliore che si può effettuare su SHA1 richiede $2^{52}$ passi.
+
+
+
+## Cosa succede in pratica?
+
+Abbiamo soltanto accennato alla funzione SHA1. Non descriveremo né MD4 e nemmeno MD5. Esistono ragioni piuttosto forti alla base di tali scelte. Queste ragioni sono riportate nella seguente tabella:
+
+ <img src="img/008.png">
+
+### Attacchi a MD5
+
+Attualmente possiamo effettuare i seguenti attacchi a MD5:
+
+- Trovare due messaggi apparentemente casuali che differiscono di soli 3 bit (poco interessante):
+  - Questo attacco avviene in pochi minuti su un portatile.
+- Trovare due documenti PDF che collidono (molto interessante);
+- Trovare due eseguibili Win32 che collidono (molto interessante):
+  - Questo attacco ha impiegato 2 giorni su una Playstation 3 (2009).
+- Rompere protocolli crittografici in uso (molto interessante).
+
+
+
+### SHA3
+
+SHA1 non venne più utilizzato ancor prima di essere rotto. La **National Institute for Standars and Technology** (NIST) indusse una competizione per determinare un nuovo standard.
+
+Le nuove famiglie di funzioni dovevano: avere diverse dimensioni di output, essere compatibili con gli standard crittografici e garantire ulteriore sicurezza ed efficienza. Schematizziamo di seguito le caratteristiche richieste:
+
+| Caratteristica  | Descrizione                                                |
+| --------------- | ---------------------------------------------------------- |
+| *Design*        | Famiglie di funzioni con 224, 256, 384, 512 bit di output. |
+| *Compatibilità* | Con gli standard crittografici esistenti.                  |
+| *Sicurezza*     | CR, one-wayness, near-collision resistence, ecc.           |
+| *Efficienza*    | Veloce come SHA-256.                                       |
+
+Il vincitore della competizione fu ancora una volta un algoritmo europeo, chiamato **Keccak**.
+
+
+
+## La trasformazione Merkle-Damgard
+
+Nonostante la funzione SHA1 abbia problemi, possiede dei concetti fondamentali per la compressione.  
+
+Abbiamo visto sopra che SHF1 funzionava iterando le applicazioni della sua funzione di compressione shf1. Quest'ultimo, sotto qualsiasi chiave, comprime a 160 bit. SHF1 funziona comprimendo il suo input 512 bit alla volta usando shf1.
+Il metodo di iterazione è stato scelto con cura. Si scopre che se shf1 è resistente alle collisioni, allora è garantito che SHF1 sia resistente alle collisioni. In altre parole, il compito più difficile di progettare una funzione di hash resistente alle collisioni che prenda input lunghi e di lunghezza variabile è stato ridotto al compito più semplice di progettare una funzione di compressione resistente alle collisioni che accetta solo input di una lunghezza fissa.
+
+Questo ha chiari vantaggi. Non abbiamo più bisogno di cercare attacchi su SHF1. Per convalidarlo ed essere certi che sia resistente alle collisioni, dobbiamo solo concentrarci sulla convalida di shf1 e mostrare che quest'ultimo è resistente alle collisioni.
+Questo è un caso di un importante principio di progettazione della funzione hash chiamato **paradigma MD**.
+*Questo paradigma mostra come trasformare una funzione di compressione in una funzione di hash in modo tale che la resistenza alla collisione della prima implichi la resistenza alla collisione della seconda. Ora esamineremo più da vicino questo paradigma.*
+Sia $b$ un parametro intero chiamato lunghezza del blocco e $v$ un altro parametro intero chiamato lunghezza variabile di concatenamento. Sia $h: K × \{0, 1\}^{b+v} → \{0, 1\}^v$ una famiglia di funzioni che chiamiamo funzione di compressione e supponiamo che sia resistente alle collisioni. Sia $B$ l'insieme di tutte le stringhe la cui lunghezza è un multiplo positivo di $b$ bit, e sia $D$ un sottoinsieme di $\{0, 1\}^{<2^b}$.
+
+**Definizione**
+
+La funzione $pad: D \rightarrow B$ è MD compatibile se $\forall M, M_1, M_2 \in D$:
+
+1. $M$ è prefisso di $pad(M)$.
+2. Se $|M_1| = |M_2|$, $|pad(M_1)| = |pad(M_2)|$.
+3. Se $|M_1| \neq |M_2|$, l'ultimo blocco di $pad(M_1)$ è diverso dall'ultimo blocco di $pad(M_2)$.
+
+Nella funzione **shapad** queste tre condizioni sono rispettate, quindi possiamo dire che si tratta di una funzione MD compatibile.
+
+Noi cerchiamo di costruire una famiglia $H: K \times D \rightarrow \{0,1\}^v$ da $h$ e $pad$. Nota che SHF1 è una famiglia di questo tipo, costruita da $h = shf1$ e $pad = shapad$. Da questo fatto deriva il seguente teorema.
+
+**Teorema**
+
+Sia $h: K \times \{0,1\}^{b+v} \rightarrow \{0,1\}^v$ una famiglia di funzioni e sia $H: K \times D \rightarrow {0,1}^v$ costruita a partire da $h$. Supponiamo di avere un avversario $A_H$ che tenti di trovare collisioni in $H$. Allora possiamo costruire un avversario $A_h$ che tenti di trovare collisioni in $h$, tale che:
+$$
+Adv_H^{cr2-kk}(A_H) \le Adv_h^{cr2-kk}(A_h)
+$$
+Il teorema ci dice che se $h$ è resistente alle collisioni, altrettanto deve valere per H.
+
+Le funzioni hash da funzioni di compressione hanno tutte la seguente struttura:
+
+<img src="img/009.png" style="zoom:80%;" >
+
+La dimostrazione consiste nel supporre che è stata trovata una collisione e risalire il ciclo for. In questo modo troverò il modo in cui avviene la collisione.
