@@ -282,7 +282,7 @@ Ogni volta che effettuo una decifrazione posso ottenere due risultati:
 - **valido**, che viene inserito in $M(c)$;
 - **non valido**, che non viene inserito in $M(c)$.
 
-Dato che esiste almeno un $c \in C$ che sia valido, allora $M(c) \neq \Phi$ ovvero $1 \le |M(c)| \le |K| \le |M|$
+Dato che esiste almeno un $c \in C$ che sia valido, allora $M(c) \neq \varnothing$ ovvero $1 \le |M(c)| \le |K| \le |M|$
 
 *Costruiamo il controesempio*.
 
