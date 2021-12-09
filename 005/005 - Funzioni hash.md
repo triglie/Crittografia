@@ -51,7 +51,7 @@ A questo punto analizziamo 3 diverse nozioni di collisione.
 
 ### Definizione: funzioni Universali o quasi Universali
 
-Sia $H: D \rightarrow R$ una famiglia di funzioni hash e sia $A$ un avversario contro la resistenza alle collisioni (**CR**, *collision resistant*). L'avversario è così definito:
+Sia $H: K \times D \rightarrow R$ una famiglia di funzioni hash e sia $A$ un avversario contro la resistenza alle collisioni (**CR**, *collision resistant*). L'avversario è così definito:
 
 <img src="img/001.png">
 
@@ -75,7 +75,7 @@ Da questo esempio possiamo affermare e banalmente dimostrare che il vantaggio di
 
 ### Definizione: funzioni universali unidirezionali
 
-Sia $H: D \rightarrow R$ una famiglia di funzioni hash e sia $A$ un avversario contro la resistenza alle collisioni (**CR1-kk**, *collision resistant - known key*). L'avversario è così definito:
+Sia $H: K \times D \rightarrow R$ una famiglia di funzioni hash e sia $A$ un avversario contro la resistenza alle collisioni (**CR1-kk**, *collision resistant - known key*). L'avversario è così definito:
 
 <img src="img/002.png">
 
@@ -137,7 +137,7 @@ Chiaramente una funzione Universale Unidirezionale è anche una funzione Univers
 $$
 Adv^{cr0}(B) \le Adv^{cr1-kk}(A)
 $$
- **Dimostrazione**
+**Dimostrazione**
 
 <u>*Hp:*</u>	Sia $H: K \times D \rightarrow R$ una funzione Universale Unidirezionale.
 
@@ -198,7 +198,7 @@ Ma la dimostrazione non può essere fatta nell'altro senso, questo perché $B$ n
 
 ### Definizione: Funzioni Resistenti alle Collisioni
 
-Sia $H: K \times D \rightarrow R$ una famiglia di funzioni hash una famiglia di funzioni hash e sia $A$ un avversario contro la resistenza alle collisioni (**CR2-kk**, *collision resistant - known key*). L'avversario è così definito:
+Sia $H: K \times D \rightarrow R$ una famiglia di funzioni hash e sia $A$ un avversario contro la resistenza alle collisioni (**CR2-kk**, *collision resistant - known key*). L'avversario è così definito:
 
 <img src="img/003.png">
 
@@ -208,7 +208,7 @@ Adv^{cr2-kk}(A) = Pr[Esp_H^{cr2-kk}(A) = 1]
 $$
 Una funzione si dice resistente alle collisioni se il vantaggio per ogni possibile avversario $A$ polinomialmente limitato è prossimo a zero.
 
-In questo caso le chiavi utilizzate sono pubbliche e l'avversario produce la coppia $x_1, x_2$ nel momento in cui entra a conoscenza della chiave $k$. Se accade che che $H(x_1) = H(x_2) \and x_1, x_2 \in D \and x_1 \neq x_2$ allora l'avversario ha trovato una collisione e ritornerà il valore 1, altrimenti ritornerà il valore 0.
+In questo caso le chiavi utilizzate sono pubbliche e l'avversario produce la coppia $x_1, x_2$ nel momento in cui entra a conoscenza della chiave $k$. Se accade che $H(x_1) = H(x_2) \and x_1, x_2 \in D \and x_1 \neq x_2$ allora l'avversario ha trovato una collisione e ritornerà il valore 1, altrimenti ritornerà il valore 0.
 
 **Osservazione**
 
@@ -226,15 +226,15 @@ L'avversario $A$ è così definito:
 
 ```pseudocode
 A(k):
-	(k, stato) <- B()
+	(x1, stato) <- B()
 	x2 <- B(k, stato)
 	if(x1, x2 in D and x1 != x2 and H(x1) != H(x2))
 		return (x1, x2)
 	else
-		resturn (x1, x2) <- random(D) tale che x1 != x2
+		return (x1, x2) <- random(D) tale che x1 != x2
 ```
 
-Quindi $A$ è un avversario che esegue inizialmente $B$ senza dare nulla in input, il quale tornerà un valore $k$ e uno $stato$, successivamente eseguirà nuovamente $B$ dando in input il valore $k$ e lo $stato$ ricevuti dallo stesso avversario $B$ nell'esecuzione precedente. Se accade che che $H(x_1) = H(x_2) \and x_1, x_2 \in D \and x_1 \neq x_2$ allora l'avversario ha trovato una collisione e ritornerà in output la coppia $(x_1, x_2)$, altrimenti ritornerà in output una coppia $(x_1, x_2)$ scelta in maniera casuale nell'insieme $D$. $A$ risulta essere un avversario polinomialmente limitato. Questo ci permette di affermare che:
+Quindi $A$ è un avversario che esegue inizialmente $B$ senza dare nulla in input, il quale tornerà un valore $x_1$ e uno $stato$, successivamente eseguirà nuovamente $B$ dando in input il valore $k$ e lo $stato$. Se accade che che $H(x_1) = H(x_2) \and x_1, x_2 \in D \and x_1 \neq x_2$ allora l'avversario ha trovato una collisione e ritornerà in output la coppia $(x_1, x_2)$, altrimenti ritornerà in output una coppia $(x_1, x_2)$ scelta in maniera casuale nell'insieme $D$. $A$ risulta essere un avversario polinomialmente limitato. Questo ci permette di affermare che:
 $$
 Adv^{cr2-kk}(A) \ge Adv^{cr1-kk}(B)
 $$
@@ -256,7 +256,7 @@ H_k(x) = AES_k(x[1]) \oplus AES_k(x[2])
 $$
 Questa funzione hash è resistente alle collisioni?
 
-No questa funzione non è resistente alle collisioni perché:
+No, questa funzione non è resistente alle collisioni perché:
 
 - fissando $x_1 = X||Y$ tali che $X,Y \in \{0,1\}^{128}$;
 - fissando $x_2 = Y||X$.
@@ -350,7 +350,7 @@ Sia $H:K \times D \rightarrow R$ una famiglia di funzioni hash allora:
 
 Questo è l'attacco più semplice, infatti basta scegliere a caso un input $x_1$ e calcoliamo $H(x_1)$. Successivamente proviamo tutti i possibili input $x_2$ fino quando non si ottiene $H(x_1) = H(x_2)$, con $x_1 \neq x_2$. Nel caso di SHA1 tale attacco potrebbe costare $2^{l < 2^{64}}$ passi.
 
-Enumeriamo in qualche modo gli elementi di $D$, in modo che $D = \{z_1, z_2, . . . , z_d\}$ dove $d = |D|$. Il seguente avversario $A$ implementa un esaustivo attacco di ricerca di collisioni:
+Enumeriamo in qualche modo gli elementi di $D$, in modo che $D = \{z_1, z_2, . . . , z_d\}$ dove $d = |D|$. Il seguente avversario $A$ implementa un attacco esaustivo di ricerca di collisioni:
 
 ```pseudocode
 A(k):
@@ -490,7 +490,7 @@ Il vincitore della competizione fu ancora una volta un algoritmo europeo, chiama
 
 ## La trasformazione Merkle-Damgard
 
-Nonostante la funzione SHA1 abbia problemi, possiede dei concetti fondamentali per la compressione.  
+Nonostante la funzione SHA1 abbia problemi, possiede dei concetti fondamentali per la compressione.
 
 Abbiamo visto sopra che SHF1 funzionava iterando le applicazioni della sua funzione di compressione shf1. Quest'ultimo, sotto qualsiasi chiave, comprime a 160 bit. SHF1 funziona comprimendo il suo input 512 bit alla volta usando shf1.
 Il metodo di iterazione è stato scelto con cura. Si scopre che se shf1 è resistente alle collisioni, allora è garantito che SHF1 sia resistente alle collisioni. In altre parole, il compito più difficile di progettare una funzione di hash resistente alle collisioni che prenda input lunghi e di lunghezza variabile è stato ridotto al compito più semplice di progettare una funzione di compressione resistente alle collisioni che accetta solo input di una lunghezza fissa.
@@ -514,7 +514,7 @@ Noi cerchiamo di costruire una famiglia $H: K \times D \rightarrow \{0,1\}^v$ da
 
 **Teorema**
 
-Sia $h: K \times \{0,1\}^{b+v} \rightarrow \{0,1\}^v$ una famiglia di funzioni e sia $H: K \times D \rightarrow {0,1}^v$ costruita a partire da $h$. Supponiamo di avere un avversario $A_H$ che tenti di trovare collisioni in $H$. Allora possiamo costruire un avversario $A_h$ che tenti di trovare collisioni in $h$, tale che:
+Sia $h: K \times \{0,1\}^{b+v} \rightarrow \{0,1\}^v$ una famiglia di funzioni e sia $H: K \times D \rightarrow \{0,1\}^v$ costruita a partire da $h$. Supponiamo di avere un avversario $A_H$ che tenti di trovare collisioni in $H$. Allora possiamo costruire un avversario $A_h$ che tenti di trovare collisioni in $h$, tale che:
 $$
 Adv_H^{cr2-kk}(A_H) \le Adv_h^{cr2-kk}(A_h)
 $$
