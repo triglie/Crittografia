@@ -198,7 +198,7 @@ Sia $F: K \times D \rightarrow R$ una famiglia di funzioni, e sia $A$ un algorit
 
 Il vantaggio prf di $A$ è definito come segue:
 $$
-Adv_F^{prf}(A) = Pr[Exp_F^{prf-1}(A) = 1] - Pr[Exp_F^{prf-0}(A) = 1]
+Adv_F^{prf}(A) = |Pr[Exp_F^{prf-1}(A) = 1] - Pr[Exp_F^{prf-0}(A) = 1]|
 $$
 Va notato che la famiglia $F$ è pubblica. L'avversario $A$, e chiunque altro, conosce la descrizione della famiglia ed è in grado, dati i valori $K, X$, di calcolare $F (K, X)$.
 I *mondi* sono catturati da ciò che chiamiamo esperimenti. Il primo esperimento sceglie un'istanza casuale $F_k$ della famiglia $F$ e quindi esegue l'avversario $A$ con oracolo $g = F_K$ . L'avversario $A$ interagisce con il suo oracolo, interrogandolo e ottenendo risposte, e alla fine emette un bit. Il secondo esperimento sceglie una funzione casuale $g: D → R$ ed esegue $A$ con questo come oracolo, restituendo nuovamente il bit di ipotesi di $A$. Ogni esperimento ha una certa probabilità di restituire 1. La probabilità viene sostituita dalle scelte casuali fatte nell'esperimento. Quindi, per il primo esperimento, la probabilità si basa sulla scelta di $K$ e di qualsiasi scelta casuale che $A$ potrebbe fare, poiché $A$ può essere un algoritmo randomizzato. Nel secondo esperimento, la probabilità si basa sulla scelta casuale di $g$ e su qualsiasi scelta casuale fatta da $A$. Queste due probabilità dovrebbero essere valutate separatamente; i due esperimenti sono completamente diversi.
@@ -349,26 +349,26 @@ Lo stesso ragionamento visto fino adesso può essere adottato per le permutazion
 
 ## Permutazioni pseudo-casuali
 
-Una famiglia di funzioni $F: K \times D \rightarrow D$ è una permutazione pseudo-casuale se il comportamento input-output di un'istanza casuale della famiglia è "computazionalmente indistinguibile" da quello di una permutazione casuale su $D$.
+Una famiglia di permutazioni $F: K \times D \rightarrow D$ è una permutazione pseudo-casuale se il comportamento input-output di un'istanza casuale della famiglia è "computazionalmente indistinguibile" da quello di una permutazione casuale su $D$.
 
 In questa impostazione, ci sono due tipi di attacchi che si possono prendere in considerazione. Uno, come prima, è che l'avversario ottiene un oracolo per la funzione $g$ che viene testata. Tuttavia, quando $F$ è una famiglia di permutazioni, si può anche considerare il caso in cui l'avversario ottiene, in aggiunta, un oracolo per $g^{−1}$. Consideriamo queste impostazioni a turno. Il primo è l'impostazione degli attacchi con testo in chiaro scelto (**chosen plaintext attack**), mentre il secondo è l'impostazione degli attacchi con testo cifrato scelto (**chosen ciphertext attack**).
 
 ### PRP sotto CPA
 
-Fissiamo una famiglia di funzioni $F : K × D → D$. ($K = \{0, 1\}^k$ e $D = \{0, 1\}^l$ , poiché questo è il caso più comune). Come prima, consideriamo un avversario $A$ che si trova in una stanza dove ha accesso oracolare a una funzione $g$ scelta in uno dei due modi.
+Fissiamo una famiglia di permutazioni $F : K × D → D$. ($K = \{0, 1\}^k$ e $D = \{0, 1\}^l$ , poiché questo è il caso più comune). Come prima, consideriamo un avversario $A$ che si trova in una stanza dove ha accesso oracolare a una funzione $g$ scelta in uno dei due modi.
 
 - **World 0:** La funzione $g$ viene estratta a caso da $Perm(D)$, ovvero la funzione $g$ viene selezionata tramite $g \leftarrow_R Perm(D)$.
 - **World 1:**  La funzione $g$ viene estratta a caso da $F$, la funzione $g$ è selezionata tramite $g \leftarrow_R F$. (Ricorda questo significa che una chiave $k \leftarrow_R K$ e allora $g$ è settata a $F_k$).
 
 **Definizione 2**
 
-Sia $F: K \times D \rightarrow D$ una famiglia di funzioni, e sia $A$ un algoritmo che usa un oracolo per una funzione $g: D \rightarrow D$, e ritorna un bit. Consideriamo due esperimenti:
+Sia $F: K \times D \rightarrow D$ una famiglia di permutazioni, e sia $A$ un algoritmo che usa un oracolo per una funzione $g: D \rightarrow D$, e ritorna un bit. Consideriamo due esperimenti:
 
 <img src="img/002.png">
 
 Il **vantaggio cpa prp** di $A$ è definito come segue:
 $$
-Adv_F^{prp-cpa}(A) = Pr[Exp_F^{prp-cpa-1}(A) = 1] - Pr[Exp_F^{prp-cpa-0}(A) = 1]
+Adv_F^{prp-cpa}(A) = |Pr[Exp_F^{prp-cpa-1}(A) = 1] - Pr[Exp_F^{prp-cpa-0}(A) = 1]|
 $$
 L'intuizione è simile a quella della Definizione 1. La differenza è che qui l'oggetto "ideale" con cui $F$ viene confrontato non è più la famiglia delle funzioni casuali, ma piuttosto la famiglia delle permutazioni casuali. Anche le convenzioni relative alle misure sulle risorse rimangono le stesse di prima. Informalmente, una famiglia $F$ è una PRP sicura sotto CPA se il vantaggio dell'avversario è piccolo per tutti gli avversari che utilizzano una quantità pratica di risorse.
 
@@ -376,7 +376,7 @@ L'intuizione è simile a quella della Definizione 1. La differenza è che qui l'
 
 ### PRP sotto CCA
 
-Fissiamo una famiglia di funzioni $F : K × D → D$. ($K = \{0, 1\}^k$ e $D = \{0, 1\}^l$ , poiché questo è il caso più comune). Come prima, consideriamo un avversario $A$ che si trova in una stanza, ma ora ha accesso oracolare a due funzioni, $g$ e la sua funzione inversa $g^{-1}$. Il modo in cui viene scelta $g$ è lo stesso del caso CPA, e una volta scelta $g$, $g^{-1}$ viene automaticamente definita, quindi non dobbiamo dire come viene scelta.
+Fissiamo una famiglia di permutazioni $F : K × D → D$. ($K = \{0, 1\}^k$ e $D = \{0, 1\}^l$ , poiché questo è il caso più comune). Come prima, consideriamo un avversario $A$ che si trova in una stanza, ma ora ha accesso oracolare a due funzioni, $g$ e la sua funzione inversa $g^{-1}$. Il modo in cui viene scelta $g$ è lo stesso del caso CPA, e una volta scelta $g$, $g^{-1}$ viene automaticamente definita, quindi non dobbiamo dire come viene scelta.
 
 - **World 0:** La funzione $g$ viene estratta a caso da $Perm(D)$, ovvero la funzione $g$ viene selezionata tramite $g \leftarrow_R Perm(D)$.
 - **World 1:**  La funzione $g$ viene estratta a caso da $F$, la funzione $g$ è selezionata tramite $g \leftarrow_R F$. (Ricorda questo significa che una chiave $k \leftarrow_R K$ e allora $g$ è settata a $F_k$).
@@ -391,7 +391,7 @@ Sia $F: K \times D \rightarrow D$ una famiglia di permutazioni, e sia $A$ un alg
 
 Il **vantaggio prp cca** di $A$ è definito come:
 $$
-Adv_F^{prp-cca} = Pr[Exp_F^{prp-cca-1}(A) = 1] - Pr[Exp_F^{prp-cca-0}(A) = 1]
+Adv_F^{prp-cca} = |Pr[Exp_F^{prp-cca-1}(A) = 1] - Pr[Exp_F^{prp-cca-0}(A) = 1]|
 $$
 L'intuizione è simile a quella della Definizione 1. La differenza è che qui l'avversario ha più potere: non solo può interrogare $g$, ma può interrogare direttamente $g^{-1}$. Anche le convenzioni relative alle misure sulle risorse rimangono le stesse di prima. Tuttavia, saremo interessati ad alcuni parametri aggiuntivi delle risorse. In particolare, poiché ora ci sono due oracoli, possiamo contare separatamente il numero di query e la lunghezza totale di queste query per ciascuno. Come al solito, informalmente, una famiglia $F$ è una PRP sicura sotto CCA se il vantaggio è piccolo per tutti gli avversari che utilizzano una quantità pratica di risorse.
 
@@ -403,7 +403,7 @@ Se un avversario non interroga $g^{-1}$, l'oracolo potrebbe anche non essere lì
 
 **Preposizione**
 
-Sia $F: K \times D \rightarrow D$ una famiglia di permutazioni e sia $A$ un avversario (attacco PRP-CPA). Si supponga che $A$ impieghi un tempo $t$ per essere eseguito, chieda $q$ query e queste totalizzano $\mu$ bit. Quindi esiste un avversario $B$ (attacco PRP-CCA) che impiega un tempo $t$ per essere eseguito, chiede $q$ query che totalizzando $\mu$ bit e non richiede query di testo cifrato scelto, dove:
+Sia $F: K \times D \rightarrow D$ una famiglia di permutazioni e sia $A$ un avversario (attacco PRP-CPA). Si supponga che $A$ impieghi un tempo $t$ per essere eseguito, chieda $q$ query e queste totalizzano $\mu$ bit. Quindi esiste un avversario $B$ (attacco PRP-CCA) che impiega un tempo $t$ per essere eseguito, chiede $q$ query che totalizzano $\mu$ bit e non richiede query di testo cifrato scelto, dove:
 $$
 Adv_F^{prp-cca}(B) \ge Adv_F^{prp-cpa}(A)
 $$
@@ -413,7 +413,7 @@ Sebbene il risultato tecnico sia facile, vale la pena fare un passo indietro per
 
 ## Applicazione ai cifrari a blocchi
 
-Una delle motivazioni principali per le nozioni di funzioni pseudo-casuali (PRF) e permutazioni pseudo-casuali (PRP) è modellare i codici a blocchi e quindi consentire l'analisi della sicurezza dei protocolli che utilizzano i codici a blocchi.
+Una delle motivazioni principali per le nozioni di funzioni pseudo-casuali (PRF) e permutazioni pseudo-casuali (PRP) è modellare i cifrari a blocchi e quindi consentire l'analisi della sicurezza dei protocolli che utilizzano i cifrari a blocchi.
 
 Come discusso nel capitolo sui cifrari a blocchi, classicamente la sicurezza di DES o altri cifrari a blocchi è stata esaminata solo per quanto riguarda il recupero delle chiavi. Cioè, l'analisi di un codice a blocchi $F$ si è concentrata sulla seguente domanda: dato un certo numero di esempi input-output
 $$
@@ -421,14 +421,14 @@ $$
 $$
 dove $K$ è una chiave casuale non conosciuta, quanto è difficile trovare $K$?
 
-Il cifrario a blocchi è considerato “sicuro” se le risorse necessarie per recuperare la chiave sono proibitive. Tuttavia, come abbiamo visto, la durezza della **key recovery** non è sufficiente per la sicurezza. Avevamo discusso di volere una proprietà di sicurezza principale dei codici a blocchi in base alla quale gli usi naturali dei codici a blocchi potessero essere dimostrati sicuri. Suggeriamo che questa proprietà principale sia che il cifrario a blocchi sia una PRP sicura, sotto CPA o CCA.
-Non possiamo dimostrare che specifici cifrari a blocchi abbiano questa proprietà. Il meglio che possiamo fare è presumere che lo facciano e poi continuare a usarli. Per le valutazioni di sicurezza quantitative, faremmo congetture specifiche sulle funzioni di vantaggio di vari codici a blocchi. Potrebbero esistere attacchi altamente efficaci che rompono DES o AES come PRF senza recuperare la chiave. Finora, non sappiamo di tali attacchi, ma la qualità dello sforzo critto-analitico che si è concentrato su questo obiettivo è piccola. Certamente, presumere che un cifrario a blocchi sia una PRF è un presupposto molto più forte di quello che è la sicurezza in senso key-recovery. Tuttavia, la motivazione e gli argomenti che abbiamo delineato a favore dell'assunzione della PRF rimangono, e la nostra opinione è che se un codice a blocchi viene violato come PRF, allora dovrebbe essere considerato insicuro e dovrebbe essere creato un sostituto.
+Il cifrario a blocchi è considerato “sicuro” se le risorse necessarie per recuperare la chiave sono proibitive. Tuttavia, come abbiamo visto, la durezza della **key recovery** non è sufficiente per la sicurezza. Avevamo discusso di volere una proprietà di sicurezza principale dei cifrari a blocchi in base alla quale gli usi naturali dei cifrari a blocchi potessero essere dimostrati sicuri. Suggeriamo che questa proprietà principale sia che il cifrario a blocchi sia una PRP sicura, sotto CPA o CCA.
+Non possiamo dimostrare che specifici cifrari a blocchi abbiano questa proprietà. Il meglio che possiamo fare è presumere che lo facciano e poi continuare a usarli. Per le valutazioni di sicurezza quantitative, faremmo congetture specifiche sulle funzioni di vantaggio di vari cifrari a blocchi. Potrebbero esistere attacchi altamente efficaci che rompono DES o AES come PRF senza recuperare la chiave. Finora, non sappiamo di tali attacchi, ma la qualità dello sforzo critto-analitico che si è concentrato su questo obiettivo è piccola. Certamente, presumere che un cifrario a blocchi sia una PRF è un presupposto molto più forte di quello che è la sicurezza in senso key-recovery. Tuttavia, la motivazione e gli argomenti che abbiamo delineato a favore dell'assunzione della PRF rimangono, e la nostra opinione è che se un codice a blocchi viene violato come PRF, allora dovrebbe essere considerato insicuro e dovrebbe essere creato un sostituto.
 
 
 
 ## Sicurezza contro Key Recovery
 
-Abbiamo menzionato più volte che la sicurezza contro il recupero delle chiavi non è sufficiente come nozione di sicurezza per un cifrario a blocchi. Tuttavia è certamente necessario: se il ripristino della chiave è facile, il codice a blocchi dovrebbe essere dichiarato non sicuro. Abbiamo indicato che vogliamo adottare come nozione di sicurezza per un cifrario a blocchi la nozione di PRF o PRP. Se questo deve essere fattibile, dovrebbe essere il caso che qualsiasi famiglia di funzioni non sicura durante il ripristino della chiave sia insicura anche come PRF o PRP. In questa sezione verifichiamo questo semplice fatto. Ciò ci consentirà di esercitare il metodo delle **riduzioni**.
+Abbiamo menzionato più volte che la sicurezza contro il recupero delle chiavi non è sufficiente come nozione di sicurezza per un cifrario a blocchi. Tuttavia è certamente necessario: se il recuperodella chiave è facile, il codice a blocchi dovrebbe essere dichiarato non sicuro. Abbiamo indicato che vogliamo adottare come nozione di sicurezza per un cifrario a blocchi la nozione di PRF o PRP. Se questo deve essere fattibile, dovrebbe essere il caso che qualsiasi famiglia di funzioni non sicura durante il recuperodella chiave sia insicura anche come PRF o PRP. In questa sezione verifichiamo questo semplice fatto. Ciò ci consentirà di esercitare il metodo delle **riduzioni**.
 Iniziamo formalizzando la sicurezza contro il recupero delle chiavi. Consideriamo un avversario che, sulla base di esempi input-output di un'istanza $F_k$ della famiglia $F$ , cerca di trovare $k$. Il suo vantaggio è definito come la probabilità che riesca a trovare $k$. La probabilità è superiore alla scelta casuale di $k$, e eventuali scelte casuali dell'avversario stesso.
 Diamo all'oracolo avversario l'accesso a $F_k$ in modo che possa ottenere esempi di input-output a sua scelta. Non limitiamo l'avversario riguardo al metodo che usa. Questo porta alla seguente definizione:
 
@@ -442,7 +442,7 @@ Il **vantaggio kr** di $B$ è definito come:
 $$
 Adv_F^{kr}(B) = Pr[Exp_F^{kr}(B) = 1] \simeq \frac{1}{|K|}
 $$
-Questa definizione è stata resa abbastanza generale in modo da catturare tutti i tipi di attacchi di ripristino delle chiavi. Tutti gli attacchi classici come la ricerca esauriente della chiave, la crittoanalisi differenziale o la crittoanalisi lineare corrispondono a scelte diverse e specifiche dell'avversario $B$. Rientrano in questo quadro perché tutti hanno l'obiettivo di trovare la chiave $k$ sulla base di un certo numero di esempi input-output di un'istanza $F_k$ del cifrario.
+Questa definizione è stata resa abbastanza generale in modo da catturare tutti i tipi di attacchi di recuperodelle chiavi. Tutti gli attacchi classici come la ricerca esauriente della chiave, la crittoanalisi differenziale o la crittoanalisi lineare corrispondono a scelte diverse e specifiche dell'avversario $B$. Rientrano in questo quadro perché tutti hanno l'obiettivo di trovare la chiave $k$ sulla base di un certo numero di esempi input-output di un'istanza $F_k$ del cifrario.
 
 
 
@@ -460,7 +460,7 @@ $B$ è un algoritmo che sfrutta un oracolo $F_k$ per una chiave casuale $k \in K
 
 Se $B$ effettua una richiesta all'oracolo, dobbiamo chiederci come $A$ può eseguire $B$. L'oracolo che $B$ vuole non è disponibile a livello di codice, ovvero l'avversario non ha accesso al sorgente dell'oracolo, è come se usasse una funzione di libreria. Tuttavia, $B$ è un pezzo di codice, che comunica con il suo oracolo tramite un'interfaccia prescritta. Se si inizia ad eseguire $B$, a un certo punto si produrrà una richiesta all'oracolo e $B$ attende una risposta. Quando quest'ultima appare, $B$ continua la sua esecuzione. Al termine delle richieste all'oracolo, $B$ restituirà il suo output. Ora, quando $A$ esegue $B$, fornirà esso stesso  le risposte alle domande dell'oracolo di $B$. Quando $B$ si ferma, dopo aver fatto qualche domanda, $A$ inserirà la risposta nella locazione di memoria prescritta e lascerà $B$ libero di continuare la sua esecuzione. $B$ non conosce la differenza tra questo oracolo "simulato" e l'oracolo reale se non nella misura in cui può ricavarlo dai valori restituiti.  
 
-Il valore che $B$ si aspetta in risposta alla richiesta $x$ è $F_k(x)$ dove $k$ è una chiave scelta in maniera casuale dall'insieme $K$. Tuttavia, $A$ ritorna ad esso come risposta per la richiesta $x$ il valore $g(x)$, dove $g$ è l'oracolo di $A$. Quando $g(x)$ è un'istanza di $F$ e quindi $B$ funziona come farebbe nel suo ambiente abituale, restituirà la chiave $k$ con una probabilità pari al suo vantaggio kr. Tuttavia, quando $g$ è una funzione casuale, $B$ restituisce valori che hanno poca relazione con quelli che ci si aspetta, i questo caso non si ha idea di quali proprietà abbia l'output. La chiave generata da $B$ viene utilizzata da $A$ per assicurarsi che sia la chiave corretta, utilizzando la sua scelta di $x$.
+Il valore che $B$ si aspetta in risposta alla richiesta $x$ è $F_k(x)$ dove $k$ è una chiave scelta in maniera casuale dall'insieme $K$. Tuttavia, $A$ ritorna ad esso come risposta per la richiesta $x$ il valore $g(x)$, dove $g$ è l'oracolo di $A$. Quando $g(x)$ è un'istanza di $F$ e quindi $B$ funziona come farebbe nel suo ambiente abituale, restituirà la chiave $k$ con una probabilità pari al suo vantaggio kr. Tuttavia, quando $g$ è una funzione casuale, $B$ restituisce valori che hanno poca relazione con quelli che ci si aspetta, in questo caso non si ha idea di quali proprietà abbia l'output. La chiave generata da $B$ viene utilizzata da $A$ per assicurarsi che sia la chiave corretta, utilizzando la sua scelta di $x$.
 
 In breve, l'avversario $A$ deve determinare se una data funzione $g$ appartiene alla famiglia $F$ o è una funzione casuale da $D$ a $R$. $A$ ha la possibilità di "sfruttare" l'altro avversario $B$.
 
