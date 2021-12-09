@@ -289,7 +289,7 @@ Fino ad ora abbiamo analizzato la sicurezza dei sistemi a blocchi carcando di cu
 
 Consideriamo  $c = E_k(m)$ una cifratura del messaggio  $m$ sotto la chiave  $k$. Per un avversario in possesso di $c$  dovrebbe risultare infattibile trovare interamente (o in parte)  $m$. La security against key recovery è sicuramente una condizione necessaria, poiché se l'avversario riuscisse a trovare  $k$, allora troverebbe anche  $m$. Non è tuttavia una condizione sufficiente.
 
-Supponiamo che vi sia un cifrario  $E : \{0,1\}^{128} \times \{0,1\}^{128}$. Sia $M[1]$ la stringa contenente i primi 128 bit  del messaggio, mentre $M[2]$ quella contenente gli ultimi 128. 
+Supponiamo che vi sia un cifrario  $E : \{0,1\}^{128} \times \{0,1\}^{256} \rightarrow \{0,1\}^{256}$. Sia $M[1]$ la stringa contenente i primi 128 bit  del messaggio, mentre $M[2]$ quella contenente gli ultimi 128. 
 Definiamo $E_k$ come segue:
 $$
 E_k(m) = AES_k(M[1])||M[2]
