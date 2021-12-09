@@ -68,7 +68,7 @@ Supponiamo di avere un alfabeto di 256 caratteri, allora il numero di chiavi è 
 $$
 256! \gt 128^{128} = 2^{7 * 128} = 2^{896} > 10^{224}
 $$
-Supponiamo di avere un computer capace di provare 1000 miliardi di chiavi al secondo, ovvero $10^12$ chiavi al secondo. In totale ci vorrebbero $10^{212} \space secondi \gt 10^{200} \space giorni \gt 10^{195} \space anni \gt 10^{185} \text{ miliardi di anni}$.
+Supponiamo di avere un computer capace di provare 1000 miliardi di chiavi al secondo, ovvero $10^{12}$ chiavi al secondo. In totale ci vorrebbero $10^{212} \space secondi \gt 10^{200} \space giorni \gt 10^{195} \space anni \gt 10^{185} \text{ miliardi di anni}$.
 
 Questo però non ci permette di affermare che il cifrario è sicuro, perché nei linguaggi naturali ci sono dei pattern che si ripetono, ovvero analizzando un testo e calcolando la frequenza delle varie lettere, si può notare che le vocali E, A, O sono le lettere più frequenti del dizionario italiano. A queste seguono L, N, R, S, T. Tra i bi-grammi più frequenti troviamo Q - U (seguiti da una vocale). La lettere H è spesso preceduta dalla lettera C o G per formare i trigrammi CHE, CHI, GHE, GHI. Le lettere straniere invece sono quasi assenti.
 
@@ -282,7 +282,7 @@ Ogni volta che effettuo una decifrazione posso ottenere due risultati:
 - **valido**, che viene inserito in $M(c)$;
 - **non valido**, che non viene inserito in $M(c)$.
 
-Dato che esiste almeno un $c \in C$ che sia valido, allora $M(c) \neq \varnothing$ ovvero $1 \le |M(c)| \le |K| \le |M|$
+Dato che esiste almeno un $c \in C$ che sia valido, allora $M(c) \neq \Phi$ ovvero $1 \le |M(c)| \le |K| \le |M|$
 
 *Costruiamo il controesempio*.
 
@@ -311,7 +311,7 @@ Shannon fece molto di più e definì una Condizione Necessaria e Sufficiente.
 $SE = (KeyGen, Enc, Dec)$, $|M| = |K| = |C|$, $SE$ offre perfetta sicurezza se e soltanto se:
 
 1. $\forall k \in K, k$ è scelta con probabilità $1/|K|$;
-2. $\forall m \in M, \forall c \in C, \exist k \in K, $ tale che $Enc(k,m) = c$.
+2. $\forall m \in M, \forall c \in C, \exist_1 k \in K, $ tale che $Enc(k,m) = c$.
 
 
 
