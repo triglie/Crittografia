@@ -86,33 +86,33 @@ Se $d=1$ allora il messaggio è l'originale, altrimenti è stato manomesso nel c
 L'algoritmo MAC può essere deterministico, randomizzato o a stati. Difficilmente si vedranno MAC a stati poiché assai problematici (ma necessari per risolvere alcuni attacchi come il replay attack). Vedremo in seguito che gli algoritmi MAC utilizzati nella pratica sono tutti deterministici, a differenza del caso della cifratura per garantire privacy che necessitava di cifrari non deterministici (la stessa restrizione non vale per l'autenticità). 
 
 Concentriamoci prima sui codici di autenticazione dei messaggi. Iniziamo con una discussione dei problemi e poi enunciamo una definizione formale.
-L'obiettivo che cerchiamo di raggiungere con un MAC è essere in grado di rilevare qualsiasi tentativo dell'avversario di modificare i dati trasmessi. Non vogliamo che l'avversario sia in grado di produrre messaggi che il destinatario riterrà autentici: solo il mittente dovrebbe essere in grado di farlo. Cioè, non vogliamo che l'avversario $A$ sia in$(M, Tag)$ tale che $VF_k (M, Tag) = 1$, ma $M$ non abbia avuto origine dal mittente $S$. Tale coppia $(M , Tag)$ è chiamato un **falso**. In alcune discussioni sulla sicurezza si presume che l'obiettivo dell'avversario sia quello di recuperare la chiave segreta $k$. Certamente se potesse farlo, sarebbe un disastro, poiché potrebbe quindi falsificare qualsiasi cosa. È importante capire, tuttavia, che un avversario potrebbe essere in grado di falsificare senza poter recuperare la chiave, e se tutto ciò che chiedessimo fosse che l'avversario non fosse in grado di recuperare la chiave, chiederemmo troppo poco. Ciò che conta è la contraffazione, non il recupero delle chiavi.
+L'obiettivo che cerchiamo di raggiungere con un MAC è essere in grado di rilevare qualsiasi tentativo dell'avversario di modificare i dati trasmessi. Non vogliamo che l'avversario sia in grado di produrre messaggi che il destinatario riterrà autentici: solo il mittente dovrebbe essere in grado di farlo. Cioè, non vogliamo che l'avversario $A$ sia in grado di generare $(M, Tag)$ tale che $VF_k (M, Tag) = 1$, ma $M$ non abbia avuto origine dal mittente $S$. Tale coppia $(M , Tag)$ è chiamato un **falso**. In alcune discussioni sulla sicurezza si presume che l'obiettivo dell'avversario sia quello di recuperare la chiave segreta $k$. Certamente se potesse farlo, sarebbe un disastro, poiché potrebbe quindi falsificare qualsiasi cosa. È importante capire, tuttavia, che un avversario potrebbe essere in grado di falsificare senza poter recuperare la chiave, e se tutto ciò che chiedessimo fosse che l'avversario non fosse in grado di recuperare la chiave, chiederemmo troppo poco. Ciò che conta è la contraffazione, non il recupero delle chiavi.
 Ora bisogna ammettere subito che alcune falsificazioni potrebbero essere inutili per l'avversario.
-Ad esempio, forse l'avversario può falsificare, ma può solo falsificare stringhe che sembrano casuali; nel frattempo, supponiamo che tutti i messaggi "buoni" debbano avere un certo formato. Questo dovrebbe davvero essere visto come un falso? La risposta è si. Se il controllo che il messaggio fosse di un certo formato fosse davvero una parte della convalida del messaggio, allora questo avrebbe dovuto essere considerato come parte del codice di autenticazione del messaggio. In assenza di ciò, non sta a noi fare supposizioni su come i messaggi sono formattati o interpretati; non ne abbiamo davvero idea. Una buona progettazione del protocollo significa che la sicurezza è garantita indipendentemente dall'applicazione.
-Nel tentativo del nostro avversario di falsificare un messaggio potremmo considerare vari attacchi. L'impostazione più semplice è che l'avversario vuole falsificare un messaggio anche se non ha mai visto alcuna trasmissione inviata dal mittente. In questo caso l'avversario deve inventare una coppia $(M, T)$ che sia valida, anche se non ha ottenuto alcuna informazione utile. Questo è chiamato **attacco senza messaggi**. Spesso non si riesce a catturare le capacità di avversari realistici, poiché un avversario che può iniettare messaggi fasulli sui mezzi di comunicazione può probabilmente vedere anche messaggi validi. Dovremmo lasciare che l'avversario usi queste informazioni.
-Supponiamo che il mittente invii la trasmissione $(M, T)$ costituita da un messaggio $M$ e dal suo tag legittimo $T$ . Il ricevitore accetterà sicuramente questo, che è integrato nella nostra definizione. Ora viene subito in mente un semplice attacco: l'avversario può semplicemente ripetere questa trasmissione, $(M, T)$, e far sì che il destinatario la accetti ancora una volta. Questo attacco è inevitabile, perché il nostro MAC è una funzione deterministica che il ricevitore ricalcola. Se il destinatario ha accettato (M, T) una volta, è obbligato a farlo ancora.
-Quello che abbiamo appena descritto si chiama **attacco replay**. L'avversario vede un valido $(M, T)$ dal mittente, e in un momento successivo lo ritrasmette. Dal momento che il ricevitore l'ha accettato la prima volta, lo farà di nuovo. Un attacco replay dovrebbe essere considerato un falso valido? Nella vita reale di solito dovrebbe. Supponiamo che il primo messaggio sia stato "Trasferisci \$1000 dal mio account all'account della parte A". Quindi la parte A potrebbe avere un modo semplice per arricchirsi: continua a riprodurre lo stesso messaggio autenticato, guardando felicemente il suo conto in banca crescere.
-È importante proteggersi dagli attacchi di replay. Ma per il momento non proveremo a farlo. Diremo che un replay non è un falso valido; per essere valido un falso deve essere di un messaggio $M$ che non sia stato già prodotto dal mittente. Vedremo in seguito che possiamo sempre ottenere sicurezza contro gli attacchi di replay con mezzi semplici; cioè, possiamo prendere qualsiasi meccanismo di autenticazione del messaggio che non è sicuro contro gli attacchi di replay e modificarlo, dopo aver reso il destinatario stateful, in modo che sia sicuro contro gli attacchi di replay. A questo punto, non preoccuparsi degli attacchi di replay si traduce in una definizione del problema più chiara. E ci porta a un approccio di progettazione del protocollo più modulare, ovvero suddividiamo il problema in parti sensibili ("sicurezza di base" e quindi "sicurezza di riproduzione") risolvendole una per una.
+Ad esempio, forse l'avversario può falsificare, ma può solo falsificare stringhe che sembrano casuali; nel frattempo, supponiamo che tutti i messaggi "buoni" debbano avere un certo formato. Questo dovrebbe davvero essere visto come un falso? La risposta è si. Se il controllo che il messaggio fosse di un certo formato fosse davvero una parte della convalida del messaggio, allora questo sarebbe stato considerato come parte del codice di autenticazione del messaggio. In assenza di ciò, non sta a noi fare supposizioni su come i messaggi sono formattati o interpretati; non ne abbiamo davvero idea. Una buona progettazione del protocollo significa che la sicurezza è garantita indipendentemente dall'applicazione.
+Nel tentativo del nostro avversario di falsificare un messaggio potremmo considerare vari attacchi. L'impostazione più semplice è che l'avversario vuole falsificare un messaggio anche se non ha mai visto alcuna trasmissione inviata dal mittente. In questo caso l'avversario deve inventare una coppia $(M, Tag)$ che sia valida, anche se non ha ottenuto alcuna informazione utile. Questo è chiamato **attacco senza messaggi**. Spesso non si riesce a catturare le capacità di avversari realistici, poiché un avversario che può iniettare messaggi fasulli sui mezzi di comunicazione può probabilmente vedere anche messaggi validi. Dovremmo lasciare che l'avversario usi queste informazioni.
+Supponiamo che il mittente invii la trasmissione $(M, Tag)$ costituita da un messaggio $M$ e dal suo tag legittimo $Tag$ . Il ricevitore accetterà sicuramente questo, che è integrato nella nostra definizione. Ora viene subito in mente un semplice attacco: l'avversario può semplicemente ripetere questa trasmissione, $(M, Tag)$, e far sì che il destinatario la accetti ancora una volta. Questo attacco è inevitabile, perché il nostro MAC è una funzione deterministica che il ricevitore ricalcola. Se il destinatario ha accettato $(M, Tag)$ una volta, è obbligato a farlo ancora.
+Quello che abbiamo appena descritto si chiama **attacco replay**. L'avversario vede una coppia valida $(M, Tag)$ dal mittente, e in un momento successivo lo ritrasmette. Dal momento che il ricevitore l'ha accettato la prima volta, lo farà di nuovo. Un attacco replay dovrebbe essere considerato un falso valido? Nella vita reale di solito dovrebbe. Supponiamo che il primo messaggio sia stato "Trasferisci \$1000 dal mio account all'account della parte A". Quindi la parte A potrebbe avere un modo semplice per arricchirsi: continua a riprodurre lo stesso messaggio autenticato, guardando felicemente il suo conto in banca crescere.
+È importante proteggersi dagli attacchi di replay. Ma per il momento non proveremo a farlo. Diremo che un replay non è un falso valido; per essere valido un falso deve essere di un messaggio $M$ che non sia stato già prodotto dal mittente. Vedremo in seguito che possiamo sempre ottenere sicurezza contro gli attacchi di replay con mezzi semplici; cioè, possiamo prendere qualsiasi meccanismo di autenticazione del messaggio che non è sicuro contro gli attacchi di replay e modificarlo, dopo aver reso il destinatario stateful, in modo che sia sicuro contro gli attacchi di replay. A questo punto, non preoccuparsi degli attacchi di replay si traduce in una definizione del problema più chiara e ci porta ad un approccio di progettazione del protocollo più modulare, ovvero suddividiamo il problema in parti sensibili ("sicurezza di base" e quindi "sicurezza di riproduzione") risolvendole una per una.
 Ovviamente non c'è motivo di pensare che l'avversario si limiterà a vedere un solo messaggio esemplificativo. Gli avversari realistici possono vedere milioni di messaggi autenticati, e tuttavia dovrebbe essere difficile per loro falsificarli.
-Per alcuni schemi di autenticazione dei messaggi, la capacità dell'avversario di falsificare aumenterà con il numero $q_s$ di coppie di tag messaggio legittime che vede. Allo stesso modo, in alcuni sistemi di sicurezza il numero di coppie valide $(M, T)$ che l'avversario può ottenere può essere limitato dall'architettura. (Ad esempio, un firmatario stateful potrebbe non essere disposto a utilizzare MAC per più di un certo numero di messaggi.) Quindi, quando diamo il nostro trattamento quantitativo della sicurezza, tratteremo $q_s$ come un'importante risorsa contraddittoria.
-Come nascono esattamente tutti questi messaggi con tag? Potremmo pensare che ci sia una distribuzione sui messaggi che il mittente autenticherà, ma in alcune impostazioni è persino possibile per l'avversario influenzare quali messaggi sono taggati. Nel peggiore dei casi, immagina che sia l'avversario stesso a scegliere quali messaggi vengono autenticati. Cioè, l'avversario sceglie un messaggio, ottiene il suo tag, sceglie un altro messaggio, ottiene il suo tag e così via. Poi prova a falsificare. Questo è chiamato attacco adattivo del messaggio scelto. Vince se riesce a falsificare il MAC di un messaggio che non ha interrogato al mittente.
+Per alcuni schemi di autenticazione dei messaggi, la capacità dell'avversario di falsificare aumenterà con il numero $q_s$ di coppie di tag messaggio legittime che vede. Allo stesso modo, in alcuni sistemi di sicurezza il numero di coppie valide $(M, Tag)$ che l'avversario può ottenere può essere limitato dall'architettura. (Ad esempio, un firmatario stateful potrebbe non essere disposto a utilizzare MAC per più di un certo numero di messaggi.) Quindi, quando diamo il nostro trattamento quantitativo della sicurezza, tratteremo $q_s$ come un'importante risorsa contraddittoria.
+Come nascono esattamente tutti questi messaggi con tag? Potremmo pensare che ci sia una distribuzione sui messaggi che il mittente autenticherà, ma in alcune impostazioni è persino possibile per l'avversario influenzare quali messaggi sono taggati. Nel peggiore dei casi, immagina che sia l'avversario stesso a scegliere quali messaggi vengono autenticati. Cioè, l'avversario sceglie un messaggio, ottiene il suo tag, sceglie un altro messaggio, ottiene il suo tag e così via. Poi prova a falsificare. Questo è chiamato **attacco adattivo del messaggio scelto**. Vince se riesce a falsificare il MAC di un messaggio che non ha interrogato al mittente.
 A prima vista può sembrare che un attacco adattivo al messaggio scelto sia irrealisticamente generoso nei confronti del nostro avversario; dopotutto, se un avversario potesse davvero ottenere un tag valido per qualsiasi messaggio che desidera, ciò non renderebbe discutibile l'intero punto dell'autenticazione dei messaggi? In effetti, ci sono diversi buoni argomenti per consentire all'avversario una capacità così forte. In primo luogo, vedremo esempi, protocolli di livello superiore che utilizzano i MAC, in cui gli attacchi adattivi del messaggio scelto sono abbastanza realistici.
 In secondo luogo, ricorda i nostri principi generali. Vogliamo progettare schemi che siano sicuri in qualsiasi utilizzo. Ciò richiede che facciamo nozioni di sicurezza nel caso peggiore, in modo che quando erriamo nel modellare realisticamente le capacità dell'avversario, commettiamo un errore dalla parte della cautela, consentendo all'avversario più potere di quanto potrebbe realmente avere. Poiché alla fine progetteremo schemi che soddisfano le nostre rigorose nozioni di sicurezza, guadagniamo solo quando assumiamo che il nostro avversario sia forte.
-Come esempio di un semplice scenario in cui un attacco adattivo del messaggio scelto è realistico, immagina che il mittente $S$ stia inoltrando messaggi a un destinatario $R$. Il mittente riceve messaggi da un numero qualsiasi di terze parti, $A_1, . . . , A_n$. Il mittente riceve un dato $M$ dalla parte $A_i$ lungo un canale sicuro, quindi trasmette al destinatario $〈i〉 ‖ M ‖ M AC_k (〈i〉 ‖ M )$. Questo è il modo in cui il mittente attesta di aver ricevuto il messaggio $M$ dalla parte $A_i$. Ora, se una di queste terze parti, diciamo $A_1$, vuole svolgere un ruolo contraddittorio, chiederà al mittente di inoltrare i suoi messaggi scelti in modo adattativo $M_1, M_2, . . .$ al ricevitore. Se, in base a ciò che vede, può imparare la chiave $k$, o anche se può imparare a falsificare un messaggio della forma 〈$2〉 ‖ M$ , in modo da produrre un messaggio valido $〈2〉 ‖ M ‖ M AC_k (〈 2〉 ‖ M )$, allora l'intento del protocollo sarà stato sconfitto. Finora abbiamo detto che vogliamo dare al nostro avversario la possibilità di ottenere MAC per messaggi di sua scelta, e poi vogliamo vedere se può o meno falsificare: produrre una coppia valida $(M, T)$ che non ha mai chiesto al mittente. Ma dovremmo riconoscere che un avversario realistico potrebbe essere in grado di produrre un sacco di falsi candidati, e potrebbe essere contento se qualcuno di questi possa essere valido. Possiamo modellare questa possibilità dando all'avversario la capacità di dire se una potenziale coppia $(M, T)$ è valida, e dicendo che l'avversario falsifichi se trova una coppia $(M, T)$ tale che $M$ non sia mai stato maccato dal mittente. Se un vero avversario può o meno provare molti possibili falsi dipende dal contesto.
-Supponiamo che il destinatario interrompa una connessione nel momento in cui rileva un tag non valido. Quindi non è realistico provare a utilizzare questo ricevitore per aiutarti a determinare se una coppia candidata $(M, T)$ è valida: un errore e il gioco è fatto. In questo caso, pensare che ci sia un solo tentativo di falsificare un messaggio è abbastanza adeguato.
-D'altra parte, supponiamo che un destinatario ignori semplicemente qualsiasi messaggio etichettato in modo improprio, mentre risponde in un modo notevolmente diverso se riceve un messaggio correttamente autenticato. In questo caso una strategia contraddittoria abbastanza ragionevole può essere quella di chiedere al verificatore la validità di un gran numero di coppie candidate $(M, T)$. L'avversario spera di trovarne almeno una valido. Quando l'avversario trova una tale coppia $(M, T)$, diremo che ha vinto.
+Come esempio di un semplice scenario in cui un attacco adattivo del messaggio scelto è realistico, immagina che il mittente $S$ stia inoltrando messaggi a un destinatario $R$. Il mittente riceve messaggi da un numero qualsiasi di terze parti, $A_1, . . . , A_n$. Il mittente riceve un dato $M$ dalla parte $A_i$ lungo un canale sicuro, quindi trasmette al destinatario $〈i〉 ‖ M ‖ M AC_k (〈i〉 ‖ M )$. Questo è il modo in cui il mittente attesta di aver ricevuto il messaggio $M$ dalla parte $A_i$. Ora, se una di queste terze parti, diciamo $A_1$, vuole svolgere un ruolo contraddittorio, chiederà al mittente di inoltrare i suoi messaggi scelti in modo adattativo $M_1, M_2, . . .$ al ricevitore. Se, in base a ciò che vede, può imparare la chiave $k$, o anche se può imparare a falsificare un messaggio della forma 〈$2〉 ‖ M$ , in modo da produrre un messaggio valido $〈2〉 ‖ M ‖ M AC_k (〈 2〉 ‖ M )$, allora l'intento del protocollo sarà stato sconfitto. Finora abbiamo detto che vogliamo dare al nostro avversario la possibilità di ottenere MAC per messaggi di sua scelta, e poi vogliamo vedere se può o meno falsificare: produrre una coppia valida $(M, Tag)$ che non ha mai chiesto al mittente. Ma dovremmo riconoscere che un avversario realistico potrebbe essere in grado di produrre un sacco di falsi candidati, e potrebbe essere contento se qualcuno di questi possa essere valido. Possiamo modellare questa possibilità dando all'avversario la capacità di dire se una potenziale coppia $(M, Tag)$ è valida, e dicendo che l'avversario falsifichi se trova una coppia $(M, Tag)$ tale che $M$ non sia mai stato maccato dal mittente. Se un vero avversario può o meno provare molti possibili falsi dipende dal contesto.
+Supponiamo che il destinatario interrompa una connessione nel momento in cui rileva un tag non valido. Quindi non è realistico provare a utilizzare questo ricevitore per aiutarti a determinare se una coppia candidata $(M, Tag)$ è valida: un errore e il gioco è fatto. In questo caso, pensare che ci sia un solo tentativo di falsificare un messaggio è abbastanza adeguato.
+D'altra parte, supponiamo che un destinatario ignori semplicemente qualsiasi messaggio etichettato in modo improprio, mentre risponde in un modo notevolmente diverso se riceve un messaggio correttamente autenticato. In questo caso una strategia contraddittoria abbastanza ragionevole può essere quella di chiedere al verificatore la validità di un gran numero di coppie candidate $(M, Tag)$. L'avversario spera di trovarne almeno una valido. Quando l'avversario trova una tale coppia $(M, Tag)$, diremo che ha vinto.
 Riassumiamo. Per essere del tutto generali, daremo al nostro avversario due diverse capacità:
 
 - La prima capacità contraddittoria consiste nell'ottenere un MAC di $M$ per qualsiasi messaggio che sceglie. Chiameremo questa **query di firma**. L'avversario ne farà un certo numero, $q_s$. 
-- La seconda capacità contraddittoria è scoprire se una particolare coppia $(M, T)$ è valida. La chiameremo una **query di verifica**. L'avversario ne farà un certo numero, $q_v$. Si dice che il nostro avversario riesca, a falsificare, se fa mai una query di verifica $(M, T)$ e ottiene un valore di ritorno di 1 (accetta) anche se il messaggio $M$ non è un messaggio di cui l'avversario conosceva già un tag. 
+- La seconda capacità contraddittoria è scoprire se una particolare coppia $(M, Tag)$ è valida. La chiameremo una **query di verifica**. L'avversario ne farà un certo numero, $q_v$. Si dice che il nostro avversario riesca, a falsificare, se fa mai una query di verifica $(M, Tag)$ e ottiene un valore di ritorno di 1 (accetta) anche se il messaggio $M$ non è un messaggio di cui l'avversario conosceva già un tag. 
 
 Procediamo ora in modo più formale. Sia $MAC: K×\{0, 1\}^*→ \{0, 1\}^*$ un codice di autenticazione del messaggio arbitrario. Formalizzeremo una nozione quantitativa di sicurezza contro l'attacco adattivo del messaggio scelto. Iniziamo descrivendo il modello. Non è necessario, nel modello, pensare al mittente e al verificatore come entità animate. Lo scopo del mittente, dal punto di vista dell'avversario, è autenticare i messaggi. Quindi incorporeremo il mittente come un oracolo che l'avversario può utilizzare per autenticare qualsiasi messaggio $M$. Questo oracolo di generazione di tag, come lo chiameremo, è il nostro modo per fornire all'avversario l'accesso black-box alla funzione $MAC_k (·)$.
 
-Lo scopo del verificatore, dal punto di vista dell'avversario, è quello di far verificare i tentativi di falsificazione. Quindi incorporeremo il verificatore come un oracolo che l'avversario può usare per vedere se una coppia candidata $(M, T)$ è valida. Questo oracolo di verifica, come lo chiameremo, è il nostro modo per fornire all'avversario l'accesso black-box alla funzione $VF_k (·)$ che è 1 se $T = MAC_k (M)$ e 0 altrimenti. Così, quando diventiamo formali, il cast dei personaggi - il mittente, il destinatario e l'avversario - si riduce al solo avversario, che esegue i suoi oracoli.
+Lo scopo del verificatore, dal punto di vista dell'avversario, è quello di far verificare i tentativi di falsificazione. Quindi incorporeremo il verificatore come un oracolo che l'avversario può usare per vedere se una coppia candidata $(M, Tag)$ è valida. Questo oracolo di verifica, come lo chiameremo, è il nostro modo per fornire all'avversario l'accesso black-box alla funzione $VF_k (·)$ che è 1 se $Tag = MAC_k (M)$ e 0 altrimenti. Così, quando diventiamo formali, il cast dei personaggi - il mittente, il destinatario e l'avversario - si riduce al solo avversario, che esegue i suoi oracoli.
 
 <img src="img/003.png">
 
-L'avversario A ha accesso a un oracolo per la generazione di tag e a un oracolo per la verifica dei tag. L'avversario vuole che l'oracolo di verifica risponda 1 ad alcune coppie $(M, T)$ per le quali non ha chiesto in precedenza all'oracolo di firma $M$. L'oracolo di verifica restituisce 1 se $T = MAC_k (M)$ e 0 se $T \neq MAC_k (M)$.
+L'avversario $A$ ha accesso a un oracolo per la generazione di tag e a un oracolo per la verifica dei tag. L'avversario vuole che l'oracolo di verifica risponda 1 ad alcune coppie $(M, Tag)$ per le quali non ha chiesto in precedenza all'oracolo di firma $M$. L'oracolo di verifica restituisce 1 se $Tag = MAC_k (M)$ e 0 se $Tag \neq MAC_k (M)$.
 
 
 
@@ -128,9 +128,9 @@ Adv_{MAC}^{uf-cma}(A) = Pr[Exp_{MAC}^{uf-cma}(A) = 1]
 $$
 Diremo che viene garantita la non falsificabilità con messaggio in chiaro se per ogni avversario $A$ polinomialmente limitato $Adv_{MAC}^{uf-cma}(A) \simeq 0$.
 
-Discutiamo la definizione di cui sopra. Crea un codice di autenticazione del messaggio, MAC. Quindi associamo a qualsiasi avversario $A$ il suo "vantaggio" o "probabilità di successo". Indichiamo questo valore come $Adv^{uf-cma}_{MAC} (A)$. È solo la possibilità che $A$ riesca a falsificare. La probabilità è sulla scelta della chiave $k$ e sulle scelte probabilistiche, se presenti, che l'avversario $A$ fa. Come al solito, il vantaggio che si può ottenere dipende sia dalla strategia dell'avversario che dalle risorse che utilizza. Informalmente, è sicuro se il vantaggio di un avversario pratico è basso. Come al solito, c'è una certa arbitrarietà su quali risorse misuriamo. Certamente è importante separare le query degli oracoli ($q_s$ e $q_v$) dal tempo. In pratica, le query di firma corrispondono ai messaggi inviati dal mittente legittimo e ottenerli è probabilmente più difficile che limitarsi a calcolarli da soli. Le query di verifica corrispondono ai messaggi che l'avversario spera che il verificatore accetti, quindi scoprire se accetta nuovamente queste query richiede l'interazione. Alcune architetture di sistema possono effettivamente limitare $q_s$ e $q_v$. Nessuna architettura di sistema può limitare $t$; che è limitato principalmente dal budget dell'avversario. Sottolineiamo che ci sono contesti in cui sei soddisfatto di un MAC che rende impraticabile la contraffazione quando $q_v = 1$ e $q_s = 0$ (un "attacco di rappresentazione") e ci sono contesti in cui sei felice quando la contraffazione è impraticabile quando $q_v = 1$ e $q_s = 1$ (un "attacco di sostituzione"). Ma forse è più comune che tu voglia che la contraffazione non sia pratica anche quando $q_s$ è grande, come 250, e anche quando $q_v$ è grande.
+Discutiamo la definizione di cui sopra. Crea un codice di autenticazione del messaggio, MAC. Quindi associamo a qualsiasi avversario $A$ il suo "vantaggio" o "probabilità di successo". Indichiamo questo valore come $Adv^{uf-cma}_{MAC} (A)$. È solo la possibilità che $A$ riesca a falsificare. La probabilità è sulla scelta della chiave $k$ e sulle scelte probabilistiche, se presenti, che l'avversario $A$ fa. Come al solito, il vantaggio che si può ottenere dipende sia dalla strategia dell'avversario che dalle risorse che utilizza. Informalmente, è sicuro se il vantaggio di un avversario pratico è basso. Come al solito, c'è una certa arbitrarietà su quali risorse misuriamo. Certamente è importante separare le query degli oracoli ($q_s$ e $q_v$) dal tempo. In pratica, le query di firma corrispondono ai messaggi inviati dal mittente legittimo e ottenerli è probabilmente più difficile che limitarsi a calcolarli da soli. Le query di verifica corrispondono ai messaggi che l'avversario spera che il verificatore accetti, quindi scoprire se accetta nuovamente queste query richiede l'interazione. Alcune architetture di sistema possono effettivamente limitare $q_s$ e $q_v$. Nessuna architettura di sistema può limitare $t$; che è limitato principalmente dal budget dell'avversario. Sottolineiamo che ci sono contesti in cui sei soddisfatto di un MAC che rende impraticabile la contraffazione quando $q_v = 1$ e $q_s = 0$ (un "attacco di rappresentazione") e ci sono contesti in cui sei felice quando la contraffazione è impraticabile quando $q_v = 1$ e $q_s = 1$ (un "attacco di sostituzione"). Ma forse è più comune che tu voglia che la contraffazione non sia pratica anche quando $q_s$ è grande, come $2^{50}$, e anche quando $q_v$ è grande.
 
-
+Naturalmente la chiave $k$ non viene data direttamente all'avversario, né vengono utilizzate scelte casuali o contatore dall'algoritmo di generazione MAC. L'avversario vede queste cose solo nella misura in cui si riflettono nelle risposte alle sue domande oracolari.
 
 ### Verifica
 
@@ -140,3 +140,105 @@ Se MAC è deterministico, come nel nostro caso, l'algoritmo di verifica è sempr
 
 Dunque per tali MAC non abbiamo bisogno di specificare un algoritmo di verifica.
 
+
+
+### Esempio
+
+Con una definizione per la sicurezza MAC in mano, non è difficile per noi definire in modo simile l'autenticità per gli schemi di crittografia e gli schemi di autenticazione dei messaggi.
+
+Esaminiamo alcuni codici di autenticazione dei messaggi di esempio e utilizziamo la definizione per valutarne i punti di forza e di debolezza. Fissiamo una **PRF** $F: K \times \{0,1\}^n \rightarrow \{0,1\}^n$. Lo schema $MAC_1: K \times \{0,1\}^* \rightarrow \{0,1\}^*$ funziona come segue:
+
+<img src="img/006.png">
+
+Ora proviamo a valutare la sicurezza di questo codice di autenticazione del messaggio. Supponiamo che l'avversario voglia falsificare il tag di un determinato messaggio $M$ . A priori non è chiaro che si possa fare. L'avversario non è in possesso della chiave segreta $k$, quindi non può calcolare $F_k$ e usarla per calcolare $Tag$ . Ma ricorda che la nozione di sicurezza che abbiamo definito dice che l'avversario ha successo fintanto che può produrre un tag corretto per qualche messaggio, non necessariamente uno dato. Notiamo ora che anche senza un attacco con il messaggio scelto (in realtà senza vedere alcun esempio di dati correttamente taggati) l'avversario può farlo. Può scegliere un messaggio $M$ composto da due blocchi uguali, diciamo $M = X||X$ dove $X$ è una stringa di *n* bit, impostare $T ← 0^n$ ed eseguire una query di verifica $(M, Tag)$. Si noti che $VF_k(M, Tag ) = 1$ perché $FK (x) ⊕ FK (x) = 0^n = T$. Più in dettaglio, l'avversario è il seguente:
+
+```pseudocode
+A(MA):
+	x <-R {0, 1}^l
+	M <- x||x
+	Tag <- 0^n
+	d <- VF_k(M, Tag)
+```
+
+In questo caso si ha che:
+$$
+Pr[Esp^{uf-cma}(A) = 1] = 1
+$$
+per tale motivo il vantaggio dell'avversario è:
+$$
+Adv^{uf-cma}_{MAC}(A) = 1
+$$
+Inoltre, l'avversario $A$ non effettua nessuna chiamata all'oracolo di firma, usando un tempo lineare.
+
+Ci sono molti altri tipi di attacchi. Per esempio è possibile notare che:
+$$
+T = F_k(M_1) \oplus F_k(M_2)
+$$
+esso non è solo il tag di $M_1M_2$, ma è anche il tag di $M_2M_1$. Quindi è possibile, dato il tag di un messaggio, per falsificare il tag di un nuovo messaggio permutando i blocchi del vecchio messaggio. L'avversario in questo caso è il seguente:
+
+```pseudocode
+A(MA):
+	X, Y <-R {0,1}^n
+	M1 = X||Y
+	M2 = Y||X
+	T1 = O_mac(M1)
+	T2 = T1[2] || T1[1]
+	d <- VF_k(M2, T2)
+```
+
+Altri esempi sono riportati nel libro a pagina 165.
+
+
+
+### Il paradigma PRF come MAC
+
+Le funzioni pseudocasuali creano buoni MAC e costruire un MAC in questo modo è un approccio eccellente. La sicurezza del MAC costruito nel modo che vedremo è praticamente la stessa della PRF utilizzata (la dimostrazione non degrada di molto la sicurezza).  
+
+Sia $F: K \times D \rightarrow \{0,1\}^{\tau}$ una famiglia di funzioni. Associamo a $F$ un codice di autenticazione del messaggio $MAC: K \times D \rightarrow \{0,1\}^{\tau}$ come segue:
+
+<img src="img/007.png">
+
+Si noti che quando pensiamo a una PRF come a un MAC è importante che il dominio della PRF sia quello che si vuole come dominio del MAC. Quindi una tale PRF probabilmente non sarà realizzata come un cifrario a blocchi. Potrebbe essere necessario realizzare una PRF che consenta input di molte lunghezze diverse, poiché potresti voler inviare messaggi MAC di molte lunghezze diverse. Finora non abbiamo dimostrato di poter realizzare tali PRF. Ma lo faremo. Mettiamo prima in relazione la sicurezza del MAC di cui sopra con quella della PRF.
+
+**Preposizione**
+
+Sia $F : K × D → \{0, 1\}^τ$ una famiglia di funzioni e sia MAC il codice di autenticazione del messaggio associato come definito sopra. Sia $A$ un qualsiasi avversario che attacca $MA = (KeyGen, MAC)$, effettuando $q_s$ query di generazione MAC della lunghezza totale $μ_s$, $q_v$ query di verifica MAC della lunghezza totale $μ_v$ e con tempo di esecuzione $t$. Allora esiste un avversario $B$ che attacca $F$ tale che:
+$$
+Adv^{uf-cma}_{MA} \le Adv^{prf}_{F}(B) + \frac{q_v}{2^\tau}
+$$
+**Dimostrazione**
+
+Si ricorda che a $B$ viene assegnato un oracolo per una funzione $f : D → \{0, 1\}^τ$ . Verrà eseguito $A$, fornendogli un ambiente in cui le domande all'oracolo di $A$ ricevono risposta da $B$.
+
+<img src="img/008.png">
+
+$B$ ha un avversario bravo a rompere il $MAC$ allora posso usarlo per rompere la $PRF$.
+$$
+Pr[Esp^{prf-1}(B) = 1] = Adv^{uf-cma}_{MA}(A) \\
+Pr[Esp^{prf-0}(B) = 1] = \frac{q_v}{2^\tau}
+$$
+Nel primo caso $f$ è un'istanza di $F$ , quindi l'ambiente simulato che $B$ sta fornendo per $A$ è esattamente quello dell'esperimento $Esp^{uf-cma}_{MA}(A)$. Poiché $B$ restituisce 1 esattamente quando $A$ esegue una query di verifica con successo, si ha la prima equazione.
+
+Nel secondo caso, $A$ è in esecuzione in un ambiente ad esso estraneo, ovvero uno in cui viene utilizzata una funzione casuale per calcolare i MAC. Non abbiamo idea di cosa farà $A$ in questo ambiente, ma non importa cosa, sappiamo che la probabilità che una particolare query di verifica $(M, Tag )$ con $M \notin S$ riceva 1 risposta è al più $2^{−τ}$ , perché questa è la probabilità che $Tag = f(M)$. Poiché ci sono al massimo $q_v$ query di verifica, segue la seconda equazione.
+
+È stato detto che l'avversario fa fino a $q_v$ domande di verifica.
+$$
+Pr[Succ] = Pr[T_1 \cup T_2 \cup ... \cup T_{q_v}]\\
+Pr[A \cup B] = Pr[A] + Pr[B] - Pr[A \cap B] \le \\ 
+\le Pr[A] + Pr[B] \le \\
+\le Pr[T_1] + ... + Pr[T_n] = \frac{q_v}{2^\tau}
+$$
+
+### CBC-MAC
+
+Una classe molto popolare di MAC si ottiene tramite il concatenamento a blocchi di cifratura di un dato cifrario a blocchi. Come mostrato nella seguente immagine.
+
+<img src="img/009.png">
+
+Sia $E: K \times \{0,1\}^n \rightarrow \{0,1\}^n$ un cifrario a blocchi. Il $CBC-MAC$ sul cifrario a blocchi $E$ ha uno spazio delle chiavi $K$ ed è dato dal seguente algoritmo:
+
+<img src="img/010.png">
+
+Come vedremo in seguito, il CBC-MAC è sicuro solo se si limita l'attenzione a stringhe di una particolare lunghezza: il dominio è limitato a $\{0, 1\}^{mn}$ per qualche costante $m$. Se applichiamo CBC-MAC a messaggi di lunghezza variabile, sarà facile distinguere questo oggetto da una funzione casuale
+
+Pag. 169 e slide 31
