@@ -57,7 +57,7 @@ Sia $E: K \times \{0,1\}^n \rightarrow \{0,1\}^n$ un cifrario a blocchi. ECB pro
 
 Gli algoritmi di cifratura e decifratura  sono i seguenti:
 
-<img src="img/001.PNG">
+<img src="img/001.png">
 
 "Break M into n-bit blocks M[1], . . ., M[m]" significa porre $m = |M|/n$ e per $i \in \{1,...,m\}$, poniamo $M[i]$ all'i-esimo blocco di n-bit in $M$. Allo stesso modo si spezza $C$. Si noti che questa volta l'algoritmo di cifratura non ha effettuato scelte casuali. Inoltre, si tratta di uno schema **not expanded**, se in ingresso diamo un messaggio di $n$ blocchi in output si avrà un critto-testo di $n$ blocchi.
 
@@ -71,7 +71,7 @@ Sia $E: K \times \{0,1\}^n \rightarrow \{0,1\}^n$ un cifrario a blocchi. CBC\$, 
 
 Gli algoritmi di cifratura e decifratura  sono i seguenti:
 
-<img src="img/002.PNG">
+<img src="img/002.png">
 
 $IV$ è $C[0]$, il quale è scelto casualmente dall'algoritmo di cifratura. Questa scelta è indipendente ogni volta che l'algoritmo viene invocato.
 
@@ -93,7 +93,7 @@ Sia $F: K \times \{0,1\}^l \rightarrow \{0,1\}^L$ una famiglia di funzioni, non 
 
 Gli algoritmi di cifratura e decifratura  sono i seguenti:
 
-<img src="img/003.PNG">
+<img src="img/003.png">
 
 Il punto di partenza $R$ viene utilizzato per definire una sequenza di valori su cui viene applicato $F_k$ per produrre uno "pseudo one-time pad" a cui viene eseguito l'XOR del testo in chiaro. Il punto di partenza $R$ scelto dall'algoritmo di cifratura è una stringa casuale di $n$ bit. Per aggiungere una stringa di $n$ bit $R$ a un intero $i$ — quando scriviamo $F_k(R + i)$ — convertiamo la stringa di $n$ bit $R$ in un intero nell'intervallo $[0 ... 2^n − 1]$ nel solito modo, aggiungiamo questo numero in $i$, prendi il risultato modulo $2^n$ e poi riconvertilo in una stringa di $n$ bit. Si noti che il punto di partenza $R$ è incluso nel testo cifrato, per consentire la decrittazione. In cifratura, $Pad$ è inteso come la stringa vuota quando m = 0.
 
