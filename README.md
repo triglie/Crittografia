@@ -1,6 +1,6 @@
 # Crittografia
 
-Appunti del corso di crittografia 2021/22 di Luigi Seminara. 
+Appunti del corso di crittografia 2021/22 di Luigi Seminara e Ernesto Casablanca. 
 
 
 
