@@ -10,9 +10,12 @@ Poniamo $\Z = \{. . . , -2, -1, 0, 1, 2, . . .\}$ che denota l'insieme di interi
 
 ### Interi mod N
 
-Se $a, b$ sono interi, non entrambi zero, allora il loro massimo comun divisore, indicato con $MCD(a, b)$, è il più grande intero $d$ tale che $d$ divide $a$ e $d$ divide $b$. Se $MCD(a, b) = 1$ allora diciamo che $a$ e $b$ sono primi tra loro. Se considero $a$ ed $N$ sono interi con $N > 0$ allora ci sono interi unici $r$, $q$ tali che $a = N q + r$ e $0 ≤ r < N$. Chiamiamo $r$ il resto della divisione di $a$ per $N$ , e lo indichiamo con $\mod N$. Notiamo che l'operazione $a \mod N$ è deﬁnita sia per valori negativi che non negativi di $a$, ma solo per valori positivi di $N$. (Quando $a$ è negativo, anche il quoziente $q$ sarà negativo, ma il resto $r$ deve essere sempre compreso nell'intervallo indicato $0 ≤ r < N$). Se $a, b$ sono interi qualsiasi e $N$ è un intero positivo, scriviamo $a \equiv b\space (mod \space N)$ se $a \space mod \space N = b \space mod \space N$. Associamo a qualsiasi intero positivo $N$ i seguenti due insiemi:
+Se $a, b$ sono interi, non entrambi zero, allora il loro massimo comun divisore, indicato con $MCD(a, b)$, è il più grande intero $d$ tale che $d$ divide $a$ e $d$ divide $b$. Se $MCD(a, b) = 1$ allora diciamo che $a$ e $b$ sono primi tra loro. Se considero $a$ ed $N$ sono interi con $N > 0$ allora ci sono coppie di interi $r$, $q$  univocamente determinate tali che $a = N q + r$ e $0 ≤ r < N$. Chiamiamo $r$ il resto della divisione di $a$ per $N$ , e lo indichiamo con $\mod N$. Notiamo che l'operazione $a \mod N$ è deﬁnita sia per valori negativi che non negativi di $a$, ma solo per valori positivi di $N$. (Quando $a$ è negativo, anche il quoziente $q$ sarà negativo, ma il resto $r$ deve essere sempre compreso nell'intervallo indicato $0 ≤ r < N$). Se $a, b$ sono interi qualsiasi e $N$ è un intero positivo, scriviamo $a \equiv b\space (mod \space N)$ se $a \space mod \space N = b \space mod \space N$. Associamo a qualsiasi intero positivo $N$ i seguenti due insiemi:
 $$
-\Z_N = \{0,1,...,N-1\} \\
+\text{Insieme dei numeri compresi fra 0 ed N-1, possibili risultati dell'operazione} \mod N \\
+\Z_N = \{0,1,...,N-1\}  \\
+\\
+\text{Insieme dei numeri compresi fra 1 ed N-1 e coprimi con N} \\
 \Z^*_N = \{i \in \Z : 1 \le i \le N-1 \and MCD(i,N) = 1\}
 $$
 Il primo insieme è detto **insieme di interi mod N**. La sua dimensione è $N$ , e contiene esattamente gli interi che sono possibili valori di un *mod N* come intervalli su $\Z$. Definiamo la funzione di **Eulero Phi** $ϕ: \Z_+ → \N$ per $ϕ(N ) = |\Z^∗_N|$ per ogni $N ∈ \Z_+$ . Cioè, $\phi(N)$ è la dimensione dell'insieme $\Z^∗_N$.
@@ -23,15 +26,18 @@ Il primo insieme è detto **insieme di interi mod N**. La sua dimensione è $N$ 
 
 Sia $G$ un insieme non vuoto, e sia $·$ un'operazione binaria su $G$. Ciò significa che per ogni due punti $a, b ∈ G$, viene definito un valore $a · b$.
 
-**Definizione 1.1**	Sia G un insieme non vuoto e sia $·$ indichiamo un'operazione binaria su $G$. Diciamo che $G$ è un gruppo se ha le seguenti proprietà:
+**Definizione 1.1**	Sia G un insieme non vuoto e sia $·$ un'operazione binaria su $G$. Diciamo che $G$ è un gruppo se ha le seguenti proprietà:
 
-1. **Chiusura**: Per ogni $a, b ∈ G$ è il caso che anche $a · b$ sia in $G$.
-2. **Associatività**: Per ogni $a, b, c ∈ G$ è il caso che $(a · b) · c = a · (b · c)$.
-3. **Identità**: esiste un elemento $1 ∈ G$ tale che $a · 1 = 1 · a = a$ per ogni $a ∈ G$.
-4. **Invertibilità**: Per ogni $a ∈ G$ esiste un unico $b ∈ G$ tale che $a · b = b · a = 1$.
+1. **Chiusura**: $\forall a, b ∈ G \Rightarrow a \cdot b \in G$
+   - Il risultato dell'operazione $\cdot$ è ancora un elemento di $G$
+2. **Associatività**: $\forall a, b ∈ G \Rightarrow (a \cdot b) \cdot c = a \cdot (b \cdot c)$
+   - L'operazione $\cdot$ gode della proprietà associativa
+3. **Identità**:  $\exists \bold{1} ∈ G : a · \bold{1} = \bold{1} · a = a \quad \forall a ∈ G$
+   - Esiste l'elemento neutro
+4. **Invertibilità**: $\forall a ∈ G \Rightarrow \exists! b ∈ G : a · b = b · a = \bold{1}$
+   - Ogni elemento possiede un inverso univocamente determinato.
 
-L'elemento $b$ nella condizione di invertibilità è indicato come l'inverso dell'elemento $a$, ed è
-denotato $a^{-1}$ .
+L'elemento $b$ nella condizione di invertibilità è indicato come l'inverso dell'elemento $a$, ed è denotato $a^{-1}$.
 
 Torniamo ora agli insiemi che abbiamo definito sopra e facciamo un'osservazione sulla loro struttura di gruppo. Sia $N$ un intero positivo. L'operazione di addizione modulo $N$ prende in ingresso due qualsiasi interi $a, b$ e restituisce $(a + b)\mod N$ . L'operazione di moltiplicazione modulo $N$ prende in input due interi qualsiasi $a, b$ e restituisce $a \cdot b\mod N$.
 
@@ -81,7 +87,10 @@ Per cui si ha $\lambda = 5$ e $\mu = 52$.
 
 **Osservazione 1.5**	Sia $N$ un intero positivo. Allora $\Z_N$ è un gruppo sotto addizione modulo $N$ e $\Z^∗_N$ è un gruppo sotto moltiplicazione modulo $N$.
 
-In $\Z_N$, l'elemento identità è $0$ e l'inverso di $a$ è $−a \mod N = N − a$. In $\Z^∗_N$, l'elemento identità è $1$ e l'inverso di $a$ è $a \cdot b ∈ \Z^∗_N$ tale che $ab ≡ 1 \space (mod \space N)$. Questa cosa è vera perché ci si restringe alle classi i cui rappresentanti sono coprimi con $N$, per dimostrare tale proprietà è necessaria l'**identità di Bézout**: se $a$ è coprimo con $N$, esistono due interi $x, y$ tali che:
+In $\Z_N$, l'elemento identità è $0$ e l'inverso di $a$ è $−a \mod N = N − a$. 
+In $\Z^∗_N$, l'elemento identità è $1$ e l'inverso di $a$ è $a \cdot b ∈ \Z^∗_N$ tale che $ab ≡ 1 \space (mod \space N)$. 
+
+Quest'ultima affermazione è vera perché ci si restringe alle classi i cui rappresentanti sono coprimi con $N$. Per dimostrare tale proprietà è necessaria l'**identità di Bézout**: se $a$ è coprimo con $N$, esistono due interi $x, y$ tali che:
 $$
 ax + Ny = 1 \\
 ax \equiv 1 \mod N
@@ -113,8 +122,6 @@ Poniamo $0 \le i \lt m$ in questo caso si ha che $a^i = a^{i \mod m}$ è sempre 
 Poniamo $i = m$ in questo caso si ha che $a^m = a^{m \mod m} = 1$ e anche in questo caso la proprietà resta vera.
 Poniamo $i \ge m$ in questo caso procediamo per induzione, per $i = m$ abbiamo già visto che la proprietà è vera, quindi consideriamo $i = m+1$ per cui si ha $a^{m + 1} = a^{m+1 \mod m}$ da cui segue $a^{m}a = a^{m \mod m}a \rightarrow a = a$, per cui continua a valere la proprietà.
 Poniamo $i \le 0$ in questo caso procediamo per induzione, per $i = 0$ abbiamo già visto che la proprietà è vera, quindi consideriamo $i = -1$ per cui si ha $a^{-1} = a^{-1 \mod m}$ da cui segue $a^{-1} = a^{m - 1} \rightarrow a^{-1} = a^{-1}$, per continua a valere la proprietà.
-
-
 
 Se $G$ è un gruppo, un insieme $S ⊆ G$ è detto sottogruppo se è un gruppo a sé stante, sotto la stessa operazione di quella per cui $G$ è un gruppo. Se sappiamo già che $G$ è un gruppo, c'è un modo semplice per verificare se $S$ è un sottogruppo: se e solo se $x · y^{−1} ∈ S$ per ogni $x, y ∈ S$. Qui $y^{−1}$ è l'inverso di $y$ in $G$.
 
@@ -193,9 +200,9 @@ Poiché $a ∈ \Z^∗_N$ sappiamo che $MCD(a, N) = 1$. L'algoritmo ``EXT-GCD`` g
 
 Siano $m_1, ..., m_n$ coprimi e $a_1, ..., a_n$ tali che:
 $$
-x = a_1 \mod m_1 \\
+x \equiv a_1 \mod m_1 \\
 ...\\
-x = a_n \mod m_n
+x \equiv a_n \mod m_n
 $$
 Il teorema cinese del resto ci assicura che tale sistema ha un'unica soluzione modulo $M = m_1, ..., m_n$ e ci dice come calcolarla.
 
@@ -209,13 +216,13 @@ dove $M_i = \frac{M}{m_i}$ e $y_i = M_i^{-1} \mod m_i$
 
 ## Gruppi ciclici e generatori
 
-Sia $G$ un gruppo, sia $1$ il suo elemento di identità, e sia $m = |G|$ l'ordine di $G$. Se $g ∈ G$ è un qualsiasi membro del gruppo, l'ordine di $g$ è deﬁnito come l'intero meno positivo $n$ tale che $g^n = 1$. Poniamo
+Sia $G$ un gruppo, sia $\bold{1}$ il suo elemento di identità, e sia $m = |G|$ l'ordine di $G$. Se $g ∈ G$ è un qualsiasi membro del gruppo, l'ordine di $g$ è deﬁnito come il più piccolo intero positivo $n$ tale che $g^n = \bold{1}$. Poniamo
 $$
 \langle g \rangle = \{g^i : i ∈ \Z_n\} = \{g^0, g^1, ..., g^{n−1}\}
 $$
 con cui indichiamo l'insieme degli elementi di gruppo generati da $g$. Un fatto che non dimostriamo, ma è facile da verificare, è che questo insieme è un sottogruppo di $G$. L'ordine di questo sottogruppo (che, per definizione, è la sua dimensione) è proprio l'ordine di $g$. L'Osservazione 1.8 ci dice che l'ordine $n$ di $g$ divide l'ordine $m$ del gruppo. 
 
-**Definizione 1.9**	Un elemento $g$ del gruppo si dice generatore di $G$ se $g = G$, o, equivalentemente, se il suo ordine è $m$. 
+**Definizione 1.9**	Un elemento $g$ del gruppo si dice generatore di $G$ se $\langle g \rangle = G$, o, equivalentemente, se il suo ordine è $m$. 
 
 **Definizione 1.10**	Se $G$ ammette un generatore esso è detto ciclico.
 
@@ -235,7 +242,7 @@ $$
 \langle 2 \rangle = \{1,2,3,4,5,6,7,8,9,10\} \\
 \langle 5 \rangle = \{1,3,4,5,9\}
 $$
-Poiché $2$ è uguale a $\Z^∗_{11}$, l'elemento $2$ è un generatore. Poiché esiste un generatore, $\Z^∗_{11}$ è ciclico. D'altra parte, $5 \neq Z^∗_{11}$, quindi $5$ non è un generatore. L'ordine di $2$ è $10$, mentre l'ordine di $5$ è $5$.
+Poiché $\langle 2 \rangle = Z^∗_{11}$, l'elemento $2$ è un generatore. Poiché esiste un generatore, $\Z^∗_{11}$ è ciclico. D'altra parte, $\langle 5 \rangle \neq Z^∗_{11}$, quindi $5$ non è un generatore. L'ordine di $2$ è $10$, mentre l'ordine di $5$ è $5$.
 Nota che questi ordini dividono l'ordine $10$ del gruppo. La tabella ci permette anche di determinare i logaritmi discreti in base $2$ dei diversi elementi del gruppo:
 
 | a                       | 1    | 2    | 3    | 4    | 5    | 6    | 7    | 8    | 9    | 10   |
@@ -301,7 +308,7 @@ Un campo finito di ordine $m$ esiste se e solo se $m = p^n$ per qualche primo $p
 
 Quando vogliamo usare un gruppo ciclico $G$ in crittografia, spesso vorremmo trovargli un generatore. Il processo utilizzato consiste nel selezionare gli elementi del gruppo in un modo appropriato e quindi testare ciascun elemento scelto per vedere se si tratta di un generatore. Si devono quindi risolvere due problemi. Uno è come verificare se un dato elemento del gruppo è un generatore e l'altro è quale processo utilizzare per scegliere i generatori candidati da testare.
 
-Sia $m = |G|$ e sia $1$ l'elemento identità di $G$. Il modo più ovvio per verificare se un dato $g ∈ G$ è un generatore consiste nel calcolare i valori $g^1, g^2, g^3, ...$, fermandosi al primo $j$ tale che $g^j = 1$.
+Sia $m = |G|$ e sia $\bold{1}$ l'elemento identità di $G$. Il modo più ovvio per verificare se un dato $g ∈ G$ è un generatore consiste nel calcolare i valori $g^1, g^2, g^3, ...$, fermandosi al primo $j$ tale che $g^j = \bold{1}$.
 Se $j = m$ allora $g$ è un generatore. Questo test tuttavia può richiedere fino a $m$ operazioni di gruppo, il che non è efficiente, dato che i gruppi di interesse sono grandi, quindi abbiamo bisogno di test migliori.
 Il modo più ovvio per scegliere i generatori candidati è scorrere l'intero gruppo in qualche modo, testando a turno ogni elemento. Anche con un test veloce, questo può richiedere molto tempo, poiché il gruppo è numeroso. Quindi vorremmo anche modi migliori per scegliere i candidati.
 
@@ -310,14 +317,14 @@ Questo ci dice che è meglio prima calcolare alte potenze di $g$ e usarle per ri
 
 **Proposizione 1.19**	Sia $G$ un gruppo ciclico e sia $m = |G|$ la dimensione di $G$. Sia $p^{α_1}_1 ··· p^{α_n}_n$ la scomposizione in fattori primi di $m$ e sia $m_i = m/p_i$ per $i = 1, ..., n$. Sia $g ∈ G$. Allora $g$ è un generatore di $G$ se e solo se
 $$
-\forall i = 1, ...,n: g^{m_i} \neq 1 \mbox{ (1.19)}
+\forall i = 1, ...,n: g^{m_i} \neq \bold{1} \mbox{ (1.19)}
 $$
-dove $1$ è l'elemento identità di $G$.
+dove $\bold{1}$ è l'elemento identità di $G$.
 
 DIMOSTRAZIONE.	Supponiamo prima che $g$ sia un generatore di $G$. Allora sappiamo che il più piccolo intero positivo $j$ tale che $g^j = 1$ è $j = m$. Poiché $0 < m_i < m$, deve valere che $g^{m_i} \neq 1$ per ogni $i = 1,  ..., m-1$.
 
-Viceversa, supponiamo che $g$ soddisfi la condizione dell'Equazione (1.19). Vogliamo dimostrare che $g$ è un generatore. Sia $j$ l'ordine di $g$, cioè il più piccolo intero positivo tale che $g^j = 1$. Allora sappiamo che $j$ deve dividere l'ordine $m$ del gruppo, cioè $m = dj$ per qualche intero $d ≥ 1$. Ciò implica che $j = p^{β_1}_1 ··· p^{β_n}_n$ per alcuni interi $β_1, ..., β_n$ che soddisfa $0 ≤ β_i ≤ α_i$ per ogni $i = 1, ..., n$.
-Se $j < m$ allora ci deve essere qualche $i$ tale che $β_i < α_i$, e in tal caso $j$ divide $m_i$, che a sua volta implica $g^{m_i} = 1$ (perché $g^j = 1$). Quindi l'assunzione che l'Equazione (1.19) sia vera implica che $j$ non può essere strettamente minore di $m$, quindi l'unica possibilità è $j = m$, il che significa che $g$ è un generatore.
+Viceversa, supponiamo che $g$ soddisfi la condizione dell'Equazione (1.19). Vogliamo dimostrare che $g$ è un generatore. Sia $j$ l'ordine di $g$, cioè il più piccolo intero positivo tale che $g^j = \bold{1}$. Allora sappiamo che $j$ deve dividere l'ordine $m$ del gruppo, cioè $m = dj$ per qualche intero $d ≥ 1$. Ciò implica che $j = p^{β_1}_1 ··· p^{β_n}_n$ per alcuni interi $β_1, ..., β_n$ che soddisfa $0 ≤ β_i ≤ α_i$ per ogni $i = 1, ..., n$.
+Se $j < m$ allora ci deve essere qualche $i$ tale che $β_i < α_i$, e in tal caso $j$ divide $m_i$, che a sua volta implica $g^{m_i} = \bold{1}$ (perché $g^j = \bold{1}$). Quindi l'assunzione che l'Equazione (1.19) sia vera implica che $j$ non può essere strettamente minore di $m$, quindi l'unica possibilità è $j = m$, il che significa che $g$ è un generatore.
 
 Il numero $n$ di termini nella scomposizione in fattori primi di $m$ non può essere maggiore di $lg(m)$, il logaritmo binario di $m$. (Questo perché $p_i ≥ 2$ e $α_i ≥ 1$ per tutti $i = 1, ..., n$). Quindi, per esempio, se il gruppo ha una dimensione di circa $2^{512}$, sono necessari al massimo 512 test. Quindi il test è abbastanza efficiente. Si noti tuttavia che richiede la conoscenza della scomposizione in fattori primi di $m$.
 Consideriamo ora il secondo problema che abbiamo discusso sopra, ovvero come scegliere gli elementi del gruppo candidati per il test. Sembra che ci siano poche ragioni per pensare che provare a turno tutti gli elementi del gruppo produca un generatore in un ragionevole lasso di tempo. Invece, consideriamo la scelta casuale di elementi del gruppo e poi li testiamo. La probabilità di successo in ogni prova è $|Gen(G)|/|G|$. Quindi il numero atteso di prove prima di trovare un generatore è $|G|/|Gen(G)|$. Per stimare l'eﬃcacia di questo metodo, dobbiamo quindi conoscere il numero di generatori nel gruppo.
@@ -339,7 +346,7 @@ Poiché $g$ è un generatore, deve valere che $ij ≡ 0 \mod m$, il che signific
 
 Quindi, supponiamo $i ∈ \Z_m − \Z^∗_m$ e sia $h = g^i$. Per mostrare che $h$ non è un generatore basta mostrare che esiste qualche $j ∈ \Z_m$ diverso da zero tale che $h^j = 1$. Sia $d = MCD(i, m)$. La nostra ipotesi $i ∈ \Z_m − \Z^∗_m$ implica che $d > 1$. Sia $j = m/d$, che è un intero diverso da zero in $\Z_m$ perché $d > 1$. Allora la seguente mostra che $h^j = 1$, completando la dimostrazione:
 $$
-h^j = g^{ij} = g^{i \cdot m/d} = g^{m \cdot i/d} = (g^m)^{i/d} = 1^{i/d} = 1 
+h^j = g^{ij} = g^{i \cdot m/d} = g^{m \cdot i/d} = (g^m)^{i/d} = 1^{i/d} = 1
 $$
 **Esempio**:
 
@@ -372,8 +379,8 @@ Di conseguenza, è comune scegliere $p$ uguale a $2q + 1$ per qualche primo $q$.
 FIND-GEN(p):
 	q <- (p - 1)/2
 	found <- 0
-	while (found != 0) do:
-		g <-R Z*_p - {1, p - 1}
+	while (found != 1) do:
+		g <-R- Z*_p - {1, p - 1}
 		if (g^2 mod p != 1 and g^q mod p != 1) then found <- 1
 	return g
 ```
@@ -427,7 +434,7 @@ per ogni $a \in \Z^*_p$.
 
 **Lemma 1.23**	Sia $p > 2$ un numero primo. Allora:
 $$
-g^{\frac{p-1}{2}} \equiv -1 \mod 11
+g^{\frac{p-1}{2}} \equiv -1 \mod p
 $$
 per ogni generatore $g$ di $\Z^*_p$.
 
