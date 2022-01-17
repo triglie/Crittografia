@@ -128,3 +128,24 @@ $$
 Adv_{\mathcal{DF}}^{uf-cma}(A) \le q_h Adm_{\mathcal{RSA}}^{ow-rsa}(B)
 $$
 In altre parole, riuscire a rompere questo cifrario nell'ipotesi del random oracle permetterebbe di costruire un avversario in grado di risolvere il problema dell'invertibilità di **RSA**.
+
+## BLS
+
+Supponiamo di avere una funzione hash (che ha il ruolo di random oracle) $H: \{0, 1\}^* \rightarrow G_1$. SI considerino due elementi $g, h \in G_2 \quad h = g^x$. La chiave segreta è $x$.
+
+```pseudocode
+SIGN(x, m):
+	y <- H(m)
+	s <- y**x
+	return s
+
+VF(pk, s, m):
+	y <- H(m)
+	if e(y, h) == e(s, g)
+		return 1
+	return 0
+```
+
+Dato che i gruppi considerati sono ciclici, si può considerare che $(g, y, h, \sigma) = (g, \hat{g}^a, g^x, \hat{g}^{ax})$, con $g$ generatore di $G_2$ e $\hat{g}$ generatore di $G_1$.
+Applicando la mappa bilineare abbiamo che $e(y, h) = e(\hat{g}^a, g^x) = e(\hat{g}, g)^{ax}$. Lo stesso è vero per la seconda coppia. Infatti $e(\sigma, g) = e(y^x, g) = e(\hat{g}^{ax}, g) = e(\hat{g}, g)^{ax}$. Quindi $e(y, h) = e(\sigma, g)$.
+
