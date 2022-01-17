@@ -162,7 +162,7 @@ Il motivo di questa scelta è da ricercarsi nel costo in termini di tempo delle 
 
 
 
-### Sicurezza contro attacchi a messaggio scelto (cpa)
+### Sicurezza contro attacchi a messaggio scelto (cpa)Boneh-Franklin
 
 Siano $\mathcal{AE} = (\mathcal{K}^a, \mathcal{E}^a, \mathcal{D}^a), \mathcal{SE} = (\mathcal{K}^s, \mathcal{E}^s, \mathcal{D}^s)$  due schemi di cifratura asimmetrico e simmetrico e $\mathcal{HE} = (\mathcal{K}^a, \mathcal{E}^h, \mathcal{D}^h)$ lo schema ibrido risultante dalla loro combinazione.
 $$
@@ -432,11 +432,11 @@ $$
 
 
 
-### Definizione formale
+### Definizione formale (ind-id-cpa)
 
 Uno schema di identity based encription è una quadrupla così definita: $\mathcal{IBE} = (\mathcal{Setup}, \mathcal{KeyDer}, \mathcal{Enc}, \mathcal{Dec})$. 
 
-Si presume l'esistenza di un'autorità T che conosce una chiave segreta master dalla quale è possibile generare altre chiavi segrete locali. Senza la master key è estremamente difficile fare altrettanto. La definizione di sicurezza **ibe** è leggermente diversa da quella classica. L'attaccante potrebbe avere a disposizione già un certo numero di chiavi private. Il sistema deve continuare a rimanere sicuro.
+Si presume l'esistenza di un'autorità T che conosce una chiave segreta master dalla quale è possibile generare altre chiavi segrete locali. Senza la master key è estremamente difficile fare altrettanto. La definizione di sicurezza **ind-id-cpa** è leggermente diversa da quella classica. L'attaccante potrebbe avere a disposizione già un certo numero di chiavi private. Il sistema deve continuare a rimanere sicuro.
 
 In aggiunta agli oracoli già visti per **ind-cpa**, l'avversario A ha la possibilità di fare un numero di domande arbitrario ma limitato ad un ulteriore oracolo, $Extract(ID) \rightarrow SK_{ID}$ che restituisce una chiave privata identificata da uno specifico ID. Può poi scegliere di essere sfidato su una ID a sua scelta, sulla quale però non può aver chiesto la chiave segreta corrispondente all'oracolo, che sarebbe imbrogliare.
 
@@ -456,11 +456,11 @@ ESP^{ind-id-cpa-0}(A):
 	return b
 ```
 
-La nozione di vantaggio in senso **ibe** dell'avversario A è così definita: 
+La nozione di vantaggio in senso **ind-id-cpa** dell'avversario A è così definita: 
 $$
-Adv^{ibe}(A) = | Pr[ESP^{ibe-1}(A) = 1] - Pr[ESP^{ibe-0}(A) = 1] |
+Adv^{ind-id-cpa}(A) = | Pr[ESP^{ind-id-cpa-1}(A) = 1] - Pr[ESP^{ind-id-cpa-0}(A) = 1] |
 $$
-Lo schema di cifratura asimmetrico è sicuro in senso **ibe** se il vantaggio di ogni possibile avversario polinomialmente limitato è prossimo a 0.
+Lo schema di cifratura asimmetrico è sicuro in senso **ind-id-cpa** se il vantaggio di ogni possibile avversario polinomialmente limitato è prossimo a 0.
 
 
 
