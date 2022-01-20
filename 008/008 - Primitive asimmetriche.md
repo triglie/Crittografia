@@ -263,7 +263,7 @@ RSA-MOD():
     return (N, p, q)
 
 RSA-GEN():
-	(N, p, q) ? RSA-MOD()
+	(N, p, q) <- RSA-MOD()
 	m <- (p-1)*(q-1)
 	e <-R- Z_m
 	d <- MOD-INV(m, e)
@@ -289,11 +289,11 @@ MILLER-RABIN(p):
     if b % p == 1 or b % p == p - 1:
     	return "prime"
     for i <-0 to k - 1:
+    	b <- b**2 % p
     	if b % p == 1: /* eravamo ad un numero diverso da 1 e -1 che però era la radice quadrata di 1, a cui siamo ora */
     		return "composite" 
     	if b % p == p - 1:
     		return "prime"
-    	b <- b**2 % p
     return "composite"
 ```
 
